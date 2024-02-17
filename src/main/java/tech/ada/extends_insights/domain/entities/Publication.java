@@ -1,9 +1,10 @@
-package tech.ada.extends_insights.domain;
+package tech.ada.extends_insights.domain.entities;
 
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import tech.ada.extends_insights.domain.entities.User;
 
 import java.time.LocalDateTime;
 
