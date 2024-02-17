@@ -8,5 +8,4 @@ public enum Category {
     DATA_SCIENCE_AND_BIG_DATA,
     WEB_TECHNOLOGIES,
     OPERATING_SYSTEM
-
 }
