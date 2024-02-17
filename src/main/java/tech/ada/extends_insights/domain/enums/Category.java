@@ -7,6 +7,6 @@ public enum Category {
     CYBERSECURITY,
     DATA_SCIENCE_AND_BIG_DATA,
     WEB_TECHNOLOGIES,
-    OS
+    OPERATING_SYSTEM
 
 }
