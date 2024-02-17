@@ -1,10 +1,11 @@
-package tech.ada.extends_insights.domain;
+package tech.ada.extends_insights.domain.entities;
 
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import tech.ada.extends_insights.domain.enums.Category;
+import tech.ada.extends_insights.domain.enums.Tag;
 
 import java.time.LocalDateTime;
 import java.util.List;
