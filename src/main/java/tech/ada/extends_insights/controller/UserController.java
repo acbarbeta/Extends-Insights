@@ -6,8 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.ada.extends_insights.domain.entities.User;
+import tech.ada.extends_insights.domain.models.requests.ChangePasswordRequest;
 import tech.ada.extends_insights.domain.models.requests.UserRequest;
 import tech.ada.extends_insights.repository.UserRepository;
+
+import java.util.Optional;
 
 @RestController("/users")
 public class UserController {
@@ -36,17 +39,19 @@ public class UserController {
     }
 
     @PatchMapping("/users/{id}/password")
-    public ResponseEntity<User> changePassword(@PathVariable Long id, @RequestParam String newPassword){
-        User user = userRepository.findById(id).orElse(null);
+    public ResponseEntity<User> changePassword(@PathVariable Long id, @RequestParam ChangePasswordRequest request) throws Exception{
+        Optional<User> optionalUser = userRepository.findById(id);
 
-        if(user == null){
+        if(optionalUser.isPresent()){
+            User modifiedUser = optionalUser.get();
+
+            if(request.password() != null) modifiedUser.setPassword(request.password());
+
+            User savedUser = userRepository.save(modifiedUser);
+            return ResponseEntity.ok(savedUser);
+        }else {
             return ResponseEntity.notFound().build();
         }
-
-        user.setPassword(newPassword);
-        User updatedUser = userRepository.save(user);
-
-        return ResponseEntity.ok(updatedUser);
     }
 
     @DeleteMapping("/users/{id}")
