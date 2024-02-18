@@ -13,6 +13,7 @@ import tech.ada.extends_insights.domain.models.requests.PublicationRequest;
 import tech.ada.extends_insights.repository.PublicationRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController("/publications")
 public class PublicationController {
@@ -76,4 +77,16 @@ public class PublicationController {
         }
         return ResponseEntity.ok(publicationByUser);
     }
+
+    @DeleteMapping("/publications-items/{id}")
+    public ResponseEntity<Void> deletePublication(@PathVariable Long id) {
+        Optional<Publication> publicationOptional = publicationRepository.findById(id);
+        if (publicationOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        publicationRepository.delete(publicationOptional.get());
+        return ResponseEntity.noContent().build();
+    }
+
 }
