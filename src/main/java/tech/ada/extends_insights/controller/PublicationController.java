@@ -25,7 +25,7 @@ public class PublicationController {
         this.modelMapper = modelMapper;
     }
 
-    @PostMapping("/publications-itens")
+    @PostMapping("/publications-items")
     public ResponseEntity<Publication> createPublication(@RequestBody PublicationRequest request) {
 
         Publication convertedPublication = modelMapper.map(request, Publication.class);
@@ -35,13 +35,13 @@ public class PublicationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newPublication);
     }
 
-    @GetMapping("/publications-itens")
+    @GetMapping("/publications-items")
     public ResponseEntity<List<Publication>> getAllPublications() {
         List<Publication> allPublications = publicationRepository.findAll();
         return ResponseEntity.ok(allPublications);
     }
 
-    @GetMapping(value = "/publications-itens", params = {"title"})
+    @GetMapping(value = "/publications-items", params = {"title"})
     public ResponseEntity<List<Publication>> getPublicationByTitle(@RequestParam String title) {
         List<Publication> publicationByTitle = publicationRepository.findByTitle(title);
         if(publicationByTitle == null) {
@@ -50,7 +50,7 @@ public class PublicationController {
         return ResponseEntity.ok(publicationByTitle);
     }
 
-    @GetMapping(value = "/publications-itens", params = {"category"})
+    @GetMapping(value = "/publications-items", params = {"category"})
     public ResponseEntity<List<Publication>> getPublicationByCategory(@RequestParam Category category) {
         List<Publication> publicationByCategory = publicationRepository.findByCategory(category);
         if(publicationByCategory == null) {
@@ -59,7 +59,7 @@ public class PublicationController {
         return ResponseEntity.ok(publicationByCategory);
     }
 
-    @GetMapping(value = "/publications-itens", params = {"tag"})
+    @GetMapping(value = "/publications-items", params = {"tag"})
     public ResponseEntity<List<Publication>> getPublicationByTag(@RequestParam Tag tag) {
         List<Publication> publicationByTag = publicationRepository.findByTag(tag);
         if(publicationByTag == null) {
@@ -68,7 +68,7 @@ public class PublicationController {
         return ResponseEntity.ok(publicationByTag);
     }
 
-    @GetMapping(value = "/publications-itens", params = {"user"})
+    @GetMapping(value = "/publications-items", params = {"user"})
     public ResponseEntity<List<Publication>> getPublicationByUser(@RequestParam User user) {
         List<Publication> publicationByUser = publicationRepository.findByUser(user);
         if(publicationByUser == null) {
