@@ -35,6 +35,20 @@ public class UserController {
         return userRepository.findByUsername(userNameNoSpace);
     }
 
+    @PatchMapping("/users/{id}/password")
+    public ResponseEntity<User> changePassword(@PathVariable Long id, @RequestParam String newPassword){
+        User user = userRepository.findById(id).orElse(null);
+
+        if(user == null){
+            return ResponseEntity.notFound().build();
+        }
+
+        user.setPassword(newPassword);
+        User updatedUser = userRepository.save(user);
+
+        return ResponseEntity.ok(updatedUser);
+    }
+
     @DeleteMapping("/users/{id}")
     public ResponseEntity<Void> deleteUserById(@PathVariable Long id) {
         User user = userRepository.findById(id).orElse(null);
