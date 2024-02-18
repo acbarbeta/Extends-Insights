@@ -15,7 +15,7 @@ public class UserController {
     private final ModelMapper modelMapper;
 
     @Autowired
-    public UserController(UserRepository userRepository, @Autowired ModelMapper modelMapper){
+    public UserController(UserRepository userRepository, ModelMapper modelMapper){
         this.userRepository = userRepository;
         this.modelMapper = modelMapper;
     }
