@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -21,6 +22,10 @@ public class User {
   private String email;
   private LocalDateTime createdOn;
   private LocalDateTime updatedOn;
+  @OneToMany(mappedBy = "author")
+  private List<Publication> publications;
+  @OneToMany(mappedBy = "author")
+  private List<Comment> comments;
 
   public User() {
     this.createdOn = LocalDateTime.now();
