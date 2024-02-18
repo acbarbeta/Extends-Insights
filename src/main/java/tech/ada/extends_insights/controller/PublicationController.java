@@ -9,10 +9,12 @@ import tech.ada.extends_insights.domain.entities.Publication;
 import tech.ada.extends_insights.domain.entities.User;
 import tech.ada.extends_insights.domain.enums.Category;
 import tech.ada.extends_insights.domain.enums.Tag;
-import tech.ada.extends_insights.domain.models.requests.PublicationRequest;
+import tech.ada.extends_insights.domain.models.requests.CreatePublicationRequest;
+import tech.ada.extends_insights.domain.models.requests.UpdatePublicationRequest;
 import tech.ada.extends_insights.repository.PublicationRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController("/publications")
 public class PublicationController {
@@ -26,7 +28,7 @@ public class PublicationController {
     }
 
     @PostMapping("/publications-items")
-    public ResponseEntity<Publication> createPublication(@RequestBody PublicationRequest request) {
+    public ResponseEntity<Publication> createPublication(@RequestBody CreatePublicationRequest request) {
 
         Publication convertedPublication = modelMapper.map(request, Publication.class);
 
@@ -75,5 +77,24 @@ public class PublicationController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(publicationByUser);
+    }
+
+    @PatchMapping("/publications-items/{id}")
+    public ResponseEntity<Publication> updatePublication(
+            @PathVariable Long id,
+            @RequestBody UpdatePublicationRequest request) throws Exception {
+        Optional<Publication> optionalPublication = publicationRepository.findById(id);
+        if(optionalPublication.isPresent()) {
+            Publication publication = optionalPublication.get();
+            if(request.getTitle() != null) publication.setPublicationTitle(request.getTitle());
+            if(request.getContent() != null) publication.setPublicationBody(request.getContent());
+            if(request.getCategory() != null) publication.setCategories(request.getCategory());
+            if(request.getTag() != null) publication.setTags(request.getTag());
+
+            Publication updatedPublication = publicationRepository.save(publication);
+            return ResponseEntity.ok(updatedPublication);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
