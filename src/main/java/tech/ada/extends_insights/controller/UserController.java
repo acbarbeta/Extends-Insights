@@ -28,7 +28,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
 
-
     @GetMapping(value = "users", params = {"username"})
     public User getUserByUsername(@RequestParam String username){
         String userNameNoSpace = username.replaceAll("\\s","");

@@ -22,10 +22,13 @@ public class Publication {
     private Long publicationId;
     private String publicationTitle;
     private String publicationBody;
+    @ManyToOne
     private User author;
-    private List<Category> category;
+    private List<Category> categories;
     private List<Tag> tags;
     private Integer views;
+    @OneToMany(mappedBy = "publication")
+    private List<Comment> comments;
     private LocalDateTime createdOn;
     private LocalDateTime updatedOn;
 
@@ -43,7 +46,7 @@ public class Publication {
         this.publicationTitle = publicationTitle;
         this.publicationBody = publicationBody;
         this.author = author;
-        this.category = category;
+        this.categories = category;
         this.tags = tags;
         this.views = 0;
         this.createdOn = LocalDateTime.now();

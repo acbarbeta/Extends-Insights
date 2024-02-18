@@ -16,7 +16,9 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long commentId;
-    private User user;
+    @ManyToOne
+    private User author;
+    @ManyToOne
     private Publication publication;
     private String commentBody;
     private LocalDateTime createdOn;
@@ -32,7 +34,7 @@ public class Comment {
                    String commentBody,
                    LocalDateTime createdOn,
                    LocalDateTime updatedOn){
-        this.user = user;
+        this.author = user;
         this.publication = publication;
         this.commentBody = commentBody;
         this.createdOn = LocalDateTime.now();
