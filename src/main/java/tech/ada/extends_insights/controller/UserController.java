@@ -28,15 +28,11 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
 
-    @GetMapping("/users/{username}")
-    public ResponseEntity<User> getUserByUsername(@PathVariable String username) {
-        User user = userRepository.findByUsername(username);
 
-        if(user == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(user);
+    @GetMapping(value = "users", params = {"username"})
+    public User getUserByUsername(@RequestParam String username){
+        String userNameNoSpace = username.replaceAll("\\s","");
+        return userRepository.findByUsername(userNameNoSpace);
     }
 
     @DeleteMapping("/users/{id}")
