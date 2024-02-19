@@ -9,6 +9,8 @@ import tech.ada.extends_insights.domain.entities.Comment;
 import tech.ada.extends_insights.domain.models.requests.CommentRequest;
 import tech.ada.extends_insights.repository.CommentRepository;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/comments")
 public class CommentController {
@@ -26,6 +28,12 @@ public class CommentController {
         Comment convertedcomment = modelMapper.map(commentRequest, Comment.class);
         Comment newComment = commentRepository.save(convertedcomment);
         return ResponseEntity.status(HttpStatus.CREATED).body(newComment);
+    }
+
+    @GetMapping("/comments")
+    public ResponseEntity<List<Comment>> getAllComments() {
+        List<Comment> comments = commentRepository.findAll();
+        return ResponseEntity.ok(comments);
     }
 
 }
