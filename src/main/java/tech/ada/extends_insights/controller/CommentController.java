@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import tech.ada.extends_insights.domain.entities.Comment;
 import tech.ada.extends_insights.domain.models.requests.CommentRequest;
 import tech.ada.extends_insights.repository.CommentRepository;
+import java.util.Optional;
 
 import java.util.List;
 
@@ -30,10 +31,26 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newComment);
     }
 
+ 
     @GetMapping("/comments")
     public ResponseEntity<List<Comment>> getAllComments() {
         List<Comment> comments = commentRepository.findAll();
         return ResponseEntity.ok(comments);
+    }
+  
+    @PutMapping("/comments/{id}")
+    public ResponseEntity<Comment> updateComment(@PathVariable Long id, @RequestBody CommentRequest commentRequest) {
+        Optional<Comment> optionalComment = commentRepository.findById(id);
+        if (optionalComment.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Comment existingComment = optionalComment.get();
+        modelMapper.map(commentRequest, existingComment);
+
+        Comment updatedComment = commentRepository.save(existingComment);
+        return ResponseEntity.ok(updatedComment);
+
     }
 
 }
