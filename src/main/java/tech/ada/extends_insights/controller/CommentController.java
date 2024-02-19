@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import tech.ada.extends_insights.domain.entities.Comment;
 import tech.ada.extends_insights.domain.models.requests.CommentRequest;
 import tech.ada.extends_insights.repository.CommentRepository;
-
 import java.util.Optional;
 
 @RestController
@@ -29,6 +28,14 @@ public class CommentController {
         Comment newComment = commentRepository.save(convertedcomment);
         return ResponseEntity.status(HttpStatus.CREATED).body(newComment);
     }
+
+
+
+
+
+
+
+
 
     @PutMapping("/comments/{id}")
     public ResponseEntity<Comment> updateComment(@PathVariable Long id, @RequestBody CommentRequest commentRequest) {
