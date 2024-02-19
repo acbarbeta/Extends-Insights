@@ -10,6 +10,8 @@ import tech.ada.extends_insights.domain.models.requests.CommentRequest;
 import tech.ada.extends_insights.repository.CommentRepository;
 import java.util.Optional;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/comments")
 public class CommentController {
@@ -29,14 +31,13 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newComment);
     }
 
-
-
-
-
-
-
-
-
+ 
+    @GetMapping("/comments")
+    public ResponseEntity<List<Comment>> getAllComments() {
+        List<Comment> comments = commentRepository.findAll();
+        return ResponseEntity.ok(comments);
+    }
+  
     @PutMapping("/comments/{id}")
     public ResponseEntity<Comment> updateComment(@PathVariable Long id, @RequestBody CommentRequest commentRequest) {
         Optional<Comment> optionalComment = commentRepository.findById(id);
@@ -49,6 +50,7 @@ public class CommentController {
 
         Comment updatedComment = commentRepository.save(existingComment);
         return ResponseEntity.ok(updatedComment);
+
     }
 
 }
