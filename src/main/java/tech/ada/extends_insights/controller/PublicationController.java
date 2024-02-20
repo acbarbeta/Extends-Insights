@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import tech.ada.extends_insights.domain.entities.Publication;
 import tech.ada.extends_insights.domain.entities.User;
 import tech.ada.extends_insights.domain.enums.Category;
-import tech.ada.extends_insights.domain.enums.Tag;
+import tech.ada.extends_insights.domain.entities.Tag;
 import tech.ada.extends_insights.domain.models.requests.PublicationRequest;
 import tech.ada.extends_insights.repository.PublicationRepository;
 

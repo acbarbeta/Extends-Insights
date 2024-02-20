@@ -5,7 +5,6 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import tech.ada.extends_insights.domain.enums.Category;
-import tech.ada.extends_insights.domain.enums.Tag;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,7 +24,8 @@ public class Publication {
     @ManyToOne
     private User author;
     private List<Category> categories;
-    private List<Tag> tags;
+    @ManyToMany
+    private List<Tag> tag;
     private Integer views;
     @OneToMany(mappedBy = "publication")
     private List<Comment> comments;
@@ -42,12 +42,12 @@ public class Publication {
                        String publicationBody,
                        User author,
                        List<Category> category,
-                       List<Tag> tags){
+                       List<Tag> tag){
         this.publicationTitle = publicationTitle;
         this.publicationBody = publicationBody;
         this.author = author;
         this.categories = category;
-        this.tags = tags;
+        this.tag = tag;
         this.views = 0;
         this.createdOn = LocalDateTime.now();
         this.updatedOn = null;
