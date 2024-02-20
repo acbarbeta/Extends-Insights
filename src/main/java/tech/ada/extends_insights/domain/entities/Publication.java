@@ -23,9 +23,8 @@ public class Publication {
     private String publicationBody;
     @ManyToOne
     private User author;
-    private List<Category> categories;
-    @ManyToMany
-    private List<Tag> tag;
+    private Category category;
+    private List<Tag> tags;
     private Integer views;
     @OneToMany(mappedBy = "publication")
     private List<Comment> comments;
@@ -41,13 +40,13 @@ public class Publication {
     public Publication(String publicationTitle,
                        String publicationBody,
                        User author,
-                       List<Category> category,
-                       List<Tag> tag){
+                       Category category,
+                       List<Tag> tags){
         this.publicationTitle = publicationTitle;
         this.publicationBody = publicationBody;
         this.author = author;
-        this.categories = category;
-        this.tag = tag;
+        this.category = category;
+        this.tags = tags;
         this.views = 0;
         this.createdOn = LocalDateTime.now();
         this.updatedOn = null;
