@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import tech.ada.extends_insights.domain.entities.Publication;
 import tech.ada.extends_insights.domain.entities.User;
 import tech.ada.extends_insights.domain.enums.Category;
-import tech.ada.extends_insights.domain.enums.Tag;
-import tech.ada.extends_insights.domain.models.requests.CreatePublicationRequest;
+import tech.ada.extends_insights.domain.entities.Tag;
+import tech.ada.extends_insights.domain.models.requests.PublicationRequest;
 import tech.ada.extends_insights.domain.models.requests.UpdatePublicationRequest;
 import tech.ada.extends_insights.repository.PublicationRepository;
 
@@ -28,7 +28,7 @@ public class PublicationController {
     }
 
     @PostMapping("/publications-items")
-    public ResponseEntity<Publication> createPublication(@RequestBody CreatePublicationRequest request) {
+    public ResponseEntity<Publication> createPublication(@RequestBody PublicationRequest request) {
 
         Publication convertedPublication = modelMapper.map(request, Publication.class);
 
@@ -96,5 +96,16 @@ public class PublicationController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @DeleteMapping("/publications-items/{id}")
+    public ResponseEntity<Void> deletePublication(@PathVariable Long id) {
+        Optional<Publication> publicationOptional = publicationRepository.findById(id);
+        if (publicationOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        publicationRepository.delete(publicationOptional.get());
+        return ResponseEntity.noContent().build();
     }
 }

@@ -6,8 +6,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.ada.extends_insights.domain.entities.User;
+import tech.ada.extends_insights.domain.models.requests.ChangePasswordRequest;
 import tech.ada.extends_insights.domain.models.requests.UserRequest;
 import tech.ada.extends_insights.repository.UserRepository;
+
+import java.util.Optional;
 
 @RestController("/users")
 public class UserController {
@@ -32,6 +35,22 @@ public class UserController {
     public User getUserByUsername(@RequestParam String username){
         String userNameNoSpace = username.replaceAll("\\s","");
         return userRepository.findByUsername(userNameNoSpace);
+    }
+
+    @PatchMapping("/users/{id}/password")
+    public ResponseEntity<User> changePassword(@PathVariable Long id, @RequestParam ChangePasswordRequest request) throws Exception{
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        if(optionalUser.isPresent()){
+            User modifiedUser = optionalUser.get();
+
+            if(request.password() != null) modifiedUser.setPassword(request.password());
+
+            User savedUser = userRepository.save(modifiedUser);
+            return ResponseEntity.ok(savedUser);
+        }else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @DeleteMapping("/users/{id}")
