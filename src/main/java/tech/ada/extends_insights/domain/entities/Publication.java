@@ -24,6 +24,7 @@ public class Publication {
     @ManyToOne
     private User author;
     private Category category;
+    @OneToMany
     private List<Tag> tags;
     private Integer views;
     @OneToMany(mappedBy = "publication")
