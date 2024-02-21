@@ -10,6 +10,7 @@ import tech.ada.extends_insights.domain.entities.User;
 import tech.ada.extends_insights.domain.enums.Category;
 import tech.ada.extends_insights.domain.entities.Tag;
 import tech.ada.extends_insights.domain.models.requests.PublicationRequest;
+import tech.ada.extends_insights.domain.models.requests.UpdatePublicationRequest;
 import tech.ada.extends_insights.repository.PublicationRepository;
 
 import java.util.List;
@@ -78,6 +79,25 @@ public class PublicationController {
         return ResponseEntity.ok(publicationByUser);
     }
 
+    @PatchMapping("/publications-items/{id}")
+    public ResponseEntity<Publication> updatePublication(
+            @PathVariable Long id,
+            @RequestBody UpdatePublicationRequest request) throws Exception {
+        Optional<Publication> optionalPublication = publicationRepository.findById(id);
+        if(optionalPublication.isPresent()) {
+            Publication publication = optionalPublication.get();
+            if(request.getTitle() != null) publication.setPublicationTitle(request.getTitle());
+            if(request.getContent() != null) publication.setPublicationBody(request.getContent());
+            if(request.getCategory() != null) publication.setCategory(request.getCategory());
+            if(request.getTag() != null) publication.setTags(request.getTag());
+
+            Publication updatedPublication = publicationRepository.save(publication);
+            return ResponseEntity.ok(updatedPublication);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
     @DeleteMapping("/publications-items/{id}")
     public ResponseEntity<Void> deletePublication(@PathVariable Long id) {
         Optional<Publication> publicationOptional = publicationRepository.findById(id);
@@ -88,5 +108,4 @@ public class PublicationController {
         publicationRepository.delete(publicationOptional.get());
         return ResponseEntity.noContent().build();
     }
-
 }
