@@ -63,7 +63,7 @@ public class PublicationController {
 
     @GetMapping(value = "/publications-items", params = {"tag"})
     public ResponseEntity<List<Publication>> getPublicationByTag(@RequestParam Tag tag) {
-        List<Publication> publicationByTag = publicationRepository.findByTag(tag);
+        List<Publication> publicationByTag = publicationRepository.findByTags(tag);
         if(publicationByTag == null) {
             return ResponseEntity.notFound().build();
         }
