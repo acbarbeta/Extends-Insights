@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.ada.extends_insights.domain.entities.Comment;
+import tech.ada.extends_insights.domain.entities.Publication;
 import tech.ada.extends_insights.domain.models.requests.CommentRequest;
 import tech.ada.extends_insights.repository.CommentRepository;
 import java.util.Optional;
@@ -53,4 +54,14 @@ public class CommentController {
 
     }
 
+    @DeleteMapping("/comments/{id}")
+    public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
+        Optional<Comment> commentOptional = commentRepository.findById(id);
+        if (commentOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        commentRepository.delete(commentOptional.get());
+        return ResponseEntity.noContent().build();
+    }
 }
