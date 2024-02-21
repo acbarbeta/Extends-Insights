@@ -88,7 +88,7 @@ public class PublicationController {
             Publication publication = optionalPublication.get();
             if(request.getTitle() != null) publication.setPublicationTitle(request.getTitle());
             if(request.getContent() != null) publication.setPublicationBody(request.getContent());
-            if(request.getCategory() != null) publication.setCategories(request.getCategory());
+            if(request.getCategory() != null) publication.setCategory(request.getCategory());
             if(request.getTag() != null) publication.setTags(request.getTag());
 
             Publication updatedPublication = publicationRepository.save(publication);
