@@ -45,7 +45,7 @@ public class PublicationController {
 
     @GetMapping(value = "/publications-items", params = {"title"})
     public ResponseEntity<List<Publication>> getPublicationByTitle(@RequestParam String title) {
-        List<Publication> publicationByTitle = publicationRepository.findByTitle(title);
+        List<Publication> publicationByTitle = publicationRepository.findByPublicationTitle(title);
         if(publicationByTitle == null) {
             return ResponseEntity.notFound().build();
         }
@@ -71,8 +71,8 @@ public class PublicationController {
     }
 
     @GetMapping(value = "/publications-items", params = {"user"})
-    public ResponseEntity<List<Publication>> getPublicationByUser(@RequestParam User user) {
-        List<Publication> publicationByUser = publicationRepository.findByUser(user);
+    public ResponseEntity<List<Publication>> getPublicationByUser(@RequestParam User author) {
+        List<Publication> publicationByUser = publicationRepository.findByAuthor(author);
         if(publicationByUser == null) {
             return ResponseEntity.notFound().build();
         }
