@@ -38,19 +38,19 @@ public class UserController {
     }
 
     @PatchMapping("/users/{id}/password")
-    public ResponseEntity<User> changePassword(@PathVariable Long id, @RequestParam ChangePasswordRequest request) throws Exception{
-        Optional<User> optionalUser = userRepository.findById(id);
+    public ResponseEntity<String> changePassword(@PathVariable Long id, @RequestBody ChangePasswordRequest changePasswordRequest) {
+        User user = userRepository.findById(id).orElse(null);
 
-        if(optionalUser.isPresent()){
-            User modifiedUser = optionalUser.get();
-
-            if(request.password() != null) modifiedUser.setPassword(request.password());
-
-            User savedUser = userRepository.save(modifiedUser);
-            return ResponseEntity.ok(savedUser);
-        }else {
+        if (user == null) {
             return ResponseEntity.notFound().build();
         }
+
+        user.setPassword(changePasswordRequest.getNewPassword());
+        userRepository.save(user);
+
+        User updatedUser = userRepository.findById(id).orElse(null);
+
+        return ResponseEntity.ok("Password updated successfully");
     }
 
     @DeleteMapping("/users/{id}")
