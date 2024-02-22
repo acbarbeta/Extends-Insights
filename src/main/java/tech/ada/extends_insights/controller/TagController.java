@@ -8,9 +8,11 @@ import org.springframework.web.bind.annotation.*;
 import tech.ada.extends_insights.domain.entities.Publication;
 import tech.ada.extends_insights.domain.entities.Tag;
 import tech.ada.extends_insights.domain.models.requests.TagRequest;
+import tech.ada.extends_insights.domain.models.requests.UpdateTagRequest;
 import tech.ada.extends_insights.repository.TagRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController("/tags")
 public class TagController {
@@ -46,5 +48,20 @@ public class TagController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(tagsByPublication);
+    }
+
+    @PatchMapping("/tags/{id}")
+    public ResponseEntity<Tag> updateTag(
+            @PathVariable Long id,
+            @RequestBody UpdateTagRequest request) throws Exception {
+        Optional<Tag> optionalTag = tagRepository.findById(id);
+        if(optionalTag.isPresent()) {
+            Tag tag = optionalTag.get();
+            tag.setTitle(request.getTitle());
+            Tag updateTag = tagRepository.save(tag);
+            return ResponseEntity.ok(updateTag);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
