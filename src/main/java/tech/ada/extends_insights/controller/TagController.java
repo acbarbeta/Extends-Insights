@@ -64,4 +64,15 @@ public class TagController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @DeleteMapping("/tags/{id}")
+    public ResponseEntity<Void> deleteTag(@PathVariable Long id) {
+        Optional<Tag> tagOptional = tagRepository.findById(id);
+        if (tagOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        tagRepository.delete(tagOptional.get());
+        return ResponseEntity.noContent().build();
+    }
 }
