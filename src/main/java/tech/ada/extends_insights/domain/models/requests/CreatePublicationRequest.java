@@ -3,7 +3,7 @@ package tech.ada.extends_insights.domain.models.requests;
 import lombok.Getter;
 import tech.ada.extends_insights.domain.entities.User;
 import tech.ada.extends_insights.domain.enums.Category;
-import tech.ada.extends_insights.domain.enums.Tag;
+import tech.ada.extends_insights.domain.entities.Tag;
 
 import java.util.List;
 
