@@ -4,12 +4,13 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import tech.ada.extends_insights.domain.entities.Publication;
 import tech.ada.extends_insights.domain.entities.Tag;
 import tech.ada.extends_insights.domain.models.requests.TagRequest;
 import tech.ada.extends_insights.repository.TagRepository;
+
+import java.util.List;
 
 @RestController("/tags")
 public class TagController {
@@ -30,5 +31,20 @@ public class TagController {
         Tag newTag = tagRepository.save(convertedTag);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(newTag);
+    }
+
+    @GetMapping("/tags")
+    public ResponseEntity<List<Tag>> getAllTags() {
+        List<Tag> allTags = tagRepository.findAll();
+        return ResponseEntity.ok(allTags);
+    }
+
+    @GetMapping(value = "/tags", params = {"publicationId"})
+    public ResponseEntity<List<Tag>> getTagsByPublication(@RequestParam Publication publication) {
+        List<Tag> tagsByPublication = tagRepository.findByPublication(publication);
+        if(tagsByPublication == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(tagsByPublication);
     }
 }
