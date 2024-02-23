@@ -10,6 +10,7 @@ import tech.ada.extends_insights.domain.models.requests.ChangePasswordRequest;
 import tech.ada.extends_insights.domain.models.requests.UserRequest;
 import tech.ada.extends_insights.repository.UserRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController("/users")
@@ -29,6 +30,12 @@ public class UserController {
         User newUser = userRepository.save(convertedUser);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
+    }
+
+    @GetMapping("/users/searchAll")
+    public List<User> findAllUsers(){
+        List<User> registeredUsers = userRepository.findAll();
+        return registeredUsers;
     }
 
     @GetMapping(value = "users", params = {"username"})
