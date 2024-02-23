@@ -18,7 +18,7 @@ Before getting started, make sure you have the following requirements installed 
    - You can choose to install PostgreSQL directly or use Docker. To use Docker, run the following command:
 
      ```bash
-     docker run -p 5432:5432 -e POSTGRES_PASSWORD=yourpassword -e POSTGRES_DB=extends_insights_db -d postgres
+     docker-compose up -d db
      ```
 
    Make sure to adjust the password as needed.
