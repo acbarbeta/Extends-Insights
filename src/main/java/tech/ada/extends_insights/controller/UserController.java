@@ -55,8 +55,6 @@ public class UserController {
         user.setPassword(changePasswordRequest.getNewPassword());
         userRepository.save(user);
 
-        User updatedUser = userRepository.findById(id).orElse(null);
-
         return ResponseEntity.ok("Password updated successfully");
     }
 
