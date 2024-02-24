@@ -21,6 +21,7 @@ public class User {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long userId;
+  @Column(unique = true)
   @NotBlank(message = "This attribute is requeried!")
   @Size(min = 4, max = 20,message = "This attribute must contain at least 4 characters and a maximum of 20")
   private String username;
@@ -28,6 +29,7 @@ public class User {
   @Size(min = 8, message = "This attribute must contain at least 8 characters")
   private String password;
   @Email
+  @Column(unique = true)
   @NotBlank(message = "This attribute requires a valid email")
   private String email;
   private LocalDateTime createdOn;
