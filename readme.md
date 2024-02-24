@@ -109,7 +109,7 @@ Open an issue to discuss new features or submit a pull request to fix existing i
 ##  🙋🏽‍♀️️ The Authores
 Feel free to reach us on LinkedIn or GitHub! 
 - Ana Clara Barbeta Vicente - [LinkedIn](https://www.linkedin.com/in/anaclara-barbeta/) profile and [Github](https://github.com/acbarbeta) page
-- Ariane Padilha Oishi - [LinkedIn]() profile and [Github]() page
+- Ariane Padilha Oishi - [LinkedIn](https://www.linkedin.com/in/ariane-padilha-oishi/) profile and [Github](https://github.com/apoishi) page
 - Elisa Maria Costa de Souza - [LinkedIn](https://www.linkedin.com/in/elisa-souzaa/) profile and [Github](https://github.com/ElisaSouzaaa) page
 - Maynara Ellen Nachbar - [LinkedIn](https://www.linkedin.com/in/maynara-nachbar/) profile and [Github](https://github.com/MayNachbar) page
 - Milena Lara Reis - [LinkedIn](https://www.linkedin.com/in/milenalarareis/) profile and [Github](https://github.com/milenalara) page
