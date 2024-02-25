@@ -12,6 +12,7 @@ Before getting started, make sure you have the following requirements installed 
 - [DBeaver](https://dbeaver.io/) or [PgAdmin](https://www.pgadmin.org/) - For database management
 - [PostgreSQL](https://www.postgresql.org/) or [Docker](https://www.docker.com/) - For running the database
 - [Postman](https://www.postman.com/) - For queries testing
+- [Swagger](https://swagger.io/) - For API documentation
 - Ensure that you have a Windows, Linux, or macOS machine;
 - Ensure that you have read the project documentation before running
   
@@ -24,8 +25,9 @@ Before getting started, make sure you have the following requirements installed 
 - Spring Data JPA
 - Spring Security
 - Spring devtools
-- Lombok
 - Spring Web
+- Lombok
+- Swagger
 - Postman
 
 ## ⚙️ Environment Setup
@@ -59,11 +61,15 @@ Before getting started, make sure you have the following requirements installed 
 3. **Running the Application:**
    - Run the application from the `ExtendsInsightsApplication` main class.
 
-4. **Using the Application:**
+4. **Using the Application with Postman:**
    - Install and open Postman on your machine.
    - In your workspace, select the menu in the upper-right corner and go to File > Import.
    - Select the `postman` file contained in the `data` folder
    - Import the collection
+   - You should then see all the queries available in our application.
+5. 
+6. **Using the Application with Swagger:**
+   - Open your browser and go to `http://localhost:8080/swagger-ui.html`
    - You should then see all the queries available in our application.
 
 ## 📚 Concepts learned
@@ -72,6 +78,7 @@ Before getting started, make sure you have the following requirements installed 
 - DataBase manipulation
 - Queries implementation (parameters, body, requests)
 - Authentication implementation with Spring Security
+- Swagger implementation
 
 ## 📁 Entities
 
@@ -113,4 +120,3 @@ Feel free to reach us on LinkedIn or GitHub!
 - Elisa Maria Costa de Souza - [LinkedIn](https://www.linkedin.com/in/elisa-souzaa/) profile and [Github](https://github.com/ElisaSouzaaa) page
 - Maynara Ellen Nachbar - [LinkedIn](https://www.linkedin.com/in/maynara-nachbar/) profile and [Github](https://github.com/MayNachbar) page
 - Milena Lara Reis - [LinkedIn](https://www.linkedin.com/in/milenalarareis/) profile and [Github](https://github.com/milenalara) page
-
