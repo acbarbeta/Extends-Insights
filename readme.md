@@ -67,8 +67,8 @@ Before getting started, make sure you have the following requirements installed 
    - Select the `postman` file contained in the `data` folder
    - Import the collection
    - You should then see all the queries available in our application.
-5. 
-6. **Using the Application with Swagger:**
+
+5. **Using the Application with Swagger:**
    - Open your browser and go to `http://localhost:8080/swagger-ui.html`
    - You should then see all the queries available in our application.
 
