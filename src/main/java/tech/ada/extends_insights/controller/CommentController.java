@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.ada.extends_insights.domain.entities.Comment;
-import tech.ada.extends_insights.domain.entities.Publication;
+import tech.ada.extends_insights.domain.entities.User;
 import tech.ada.extends_insights.domain.models.requests.CommentRequest;
 import tech.ada.extends_insights.repository.CommentRepository;
 import java.util.Optional;
@@ -36,6 +36,15 @@ public class CommentController {
     @GetMapping("/comments")
     public ResponseEntity<List<Comment>> getAllComments() {
         List<Comment> comments = commentRepository.findAll();
+        return ResponseEntity.ok(comments);
+    }
+
+    @GetMapping(value = "/comments", params = {"author"})
+    public ResponseEntity<List<Comment>> getCommentByUsername(@RequestParam User author) {
+        List<Comment> comments = commentRepository.findByAuthor(author);
+        if(comments.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
         return ResponseEntity.ok(comments);
     }
   
