@@ -29,12 +29,10 @@ public class Comment {
         this.updatedOn = null;
     }
 
-    public Comment(User user,
+    public Comment(User author,
                    Publication publication,
-                   String commentBody,
-                   LocalDateTime createdOn,
-                   LocalDateTime updatedOn){
-        this.author = user;
+                   String commentBody){
+        this.author = author;
         this.publication = publication;
         this.commentBody = commentBody;
         this.createdOn = LocalDateTime.now();

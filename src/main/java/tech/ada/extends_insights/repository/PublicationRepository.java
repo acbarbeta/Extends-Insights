@@ -11,8 +11,8 @@ import java.util.List;
 
 @Repository
 public interface PublicationRepository extends JpaRepository<Publication, Long>{
-    public List<Publication> findByPublicationTitle(String title);
-    public List<Publication> findByCategory(Category category);
-    public List<Publication> findByTags(Tag tag);
-    public List<Publication> findByAuthor(User author);
+    List<Publication> findByPublicationTitle(String title);
+    List<Publication> findByCategory(Category category);
+    List<Publication> findByTags(Tag tag);
+    List<Publication> findByAuthor(User author);
 }
