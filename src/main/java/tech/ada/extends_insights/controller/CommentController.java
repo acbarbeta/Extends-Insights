@@ -1,5 +1,8 @@
 package tech.ada.extends_insights.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -25,6 +28,11 @@ public class CommentController {
         this.modelMapper = modelMapper;
     }
 
+    @Operation(summary = "Create a new comment")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Comment created"),
+            @ApiResponse(responseCode = "400", description = "Invalid input")
+    })
     @PostMapping("/comments")
     public ResponseEntity<Comment> createComment(@RequestBody CommentRequest commentRequest) {
         Comment convertedcomment = modelMapper.map(commentRequest, Comment.class);
@@ -32,13 +40,22 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.CREATED).body(newComment);
     }
 
- 
+    @Operation(summary = "Get all comments")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Comments found"),
+            @ApiResponse(responseCode = "404", description = "Comments not found")
+    })
     @GetMapping("/comments")
     public ResponseEntity<List<Comment>> getAllComments() {
         List<Comment> comments = commentRepository.findAll();
         return ResponseEntity.ok(comments);
     }
 
+    @Operation(summary = "Get comment by author")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Comment found"),
+            @ApiResponse(responseCode = "404", description = "Comment not found")
+    })
     @GetMapping(value = "/comments", params = {"author"})
     public ResponseEntity<List<Comment>> getCommentByUsername(@RequestParam User author) {
         List<Comment> comments = commentRepository.findByAuthor(author);
@@ -47,7 +64,12 @@ public class CommentController {
         }
         return ResponseEntity.ok(comments);
     }
-  
+
+    @Operation(summary = "Get comment by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Comment found"),
+            @ApiResponse(responseCode = "404", description = "Comment not found")
+    })
     @PutMapping("/comments/{id}")
     public ResponseEntity<Comment> updateComment(@PathVariable Long id, @RequestBody CommentRequest commentRequest) {
         Optional<Comment> optionalComment = commentRepository.findById(id);
@@ -63,6 +85,11 @@ public class CommentController {
 
     }
 
+    @Operation(summary = "Delete comment by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "204", description = "Comment deleted"),
+            @ApiResponse(responseCode = "404", description = "Comment not found")
+    })
     @DeleteMapping("/comments/{id}")
     public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
         Optional<Comment> commentOptional = commentRepository.findById(id);
