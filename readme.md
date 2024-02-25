@@ -24,9 +24,10 @@ Before getting started, make sure you have the following requirements installed 
 - Spring Data JPA
 - Spring Security
 - Spring devtools
-- Lombok
 - Spring Web
+- Lombok
 - Postman
+- Swagger
 
 ## ⚙️ Environment Setup
 
@@ -59,12 +60,24 @@ Before getting started, make sure you have the following requirements installed 
 3. **Running the Application:**
    - Run the application from the `ExtendsInsightsApplication` main class.
 
-4. **Using the Application:**
+4. **Using the Application on Postman:**
    - Install and open Postman on your machine.
    - In your workspace, select the menu in the upper-right corner and go to File > Import.
    - Select the `postman` file contained in the `data` folder
    - Import the collection
    - You should then see all the queries available in our application.
+
+5. **Using the Application on Swagger:**
+   - Open your browser and go to `http://localhost:8080/swagger-ui.html` to access the Swagger documentation.
+   - Enter the username and password set up in the `application.properties` file:
+
+     ```properties
+     spring.security.user.name=user
+     spring.security.user.password=12345
+     ```
+
+   - You should then see all the queries available in our application. 
+   - You can test the queries directly from the Swagger documentation.
 
 ## 📚 Concepts learned
 - Spring Boot Framework
@@ -72,6 +85,7 @@ Before getting started, make sure you have the following requirements installed 
 - DataBase manipulation
 - Queries implementation (parameters, body, requests)
 - Authentication implementation with Spring Security
+- Swagger documentation
 
 ## 📁 Entities
 
