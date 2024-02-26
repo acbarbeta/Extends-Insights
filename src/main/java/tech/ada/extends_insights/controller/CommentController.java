@@ -65,7 +65,7 @@ public class CommentController {
         return ResponseEntity.ok(comments);
     }
 
-    @Operation(summary = "Get comment by id")
+    @Operation(summary = "Update comment by id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Comment found"),
             @ApiResponse(responseCode = "404", description = "Comment not found")

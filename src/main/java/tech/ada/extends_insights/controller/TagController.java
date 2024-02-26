@@ -68,7 +68,7 @@ public class TagController {
         return ResponseEntity.ok(tagsByPublication);
     }
 
-    @Operation(summary = "Upadate tag by id")
+    @Operation(summary = "Update tag by id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Tag updated"),
             @ApiResponse(responseCode = "404", description = "Tag not found")
