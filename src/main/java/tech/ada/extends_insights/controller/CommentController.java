@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import tech.ada.extends_insights.domain.entities.Comment;
 import tech.ada.extends_insights.domain.entities.User;
 import tech.ada.extends_insights.domain.models.requests.CommentRequest;
+import tech.ada.extends_insights.domain.models.requests.UpdateCommentRequest;
 import tech.ada.extends_insights.repository.CommentRepository;
 import java.util.Optional;
 
@@ -45,7 +46,7 @@ public class CommentController {
             @ApiResponse(responseCode = "200", description = "Comments found"),
             @ApiResponse(responseCode = "404", description = "Comments not found")
     })
-    @GetMapping("/comments")
+    @GetMapping("/all-comments")
     public ResponseEntity<List<Comment>> getAllComments() {
         List<Comment> comments = commentRepository.findAll();
         return ResponseEntity.ok(comments);
@@ -56,9 +57,9 @@ public class CommentController {
             @ApiResponse(responseCode = "200", description = "Comment found"),
             @ApiResponse(responseCode = "404", description = "Comment not found")
     })
-    @GetMapping(value = "/comments", params = {"author"})
-    public ResponseEntity<List<Comment>> getCommentByUsername(@RequestParam User author) {
-        List<Comment> comments = commentRepository.findByAuthor(author);
+    @GetMapping(value = "/comments", params = {"authorId"})
+    public ResponseEntity<List<Comment>> getCommentByUserId(@RequestParam User authorId) {
+        List<Comment> comments = commentRepository.findByAuthor(authorId);
         if(comments.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
@@ -70,18 +71,19 @@ public class CommentController {
             @ApiResponse(responseCode = "200", description = "Comment found"),
             @ApiResponse(responseCode = "404", description = "Comment not found")
     })
-    @PutMapping("/comments/{id}")
-    public ResponseEntity<Comment> updateComment(@PathVariable Long id, @RequestBody CommentRequest commentRequest) {
-        Optional<Comment> optionalComment = commentRepository.findById(id);
-        if (optionalComment.isEmpty()) {
+    @PatchMapping("/comments/{id}")
+    public ResponseEntity<String> updateComment(@PathVariable Long id, @RequestBody UpdateCommentRequest commentRequest) {
+
+        Comment comment = commentRepository.findById(id).orElse(null);
+
+        if (comment == null) {
             return ResponseEntity.notFound().build();
         }
 
-        Comment existingComment = optionalComment.get();
-        modelMapper.map(commentRequest, existingComment);
+        comment.setCommentBody(commentRequest.getNewCommentBody());
+        commentRepository.save(comment);
 
-        Comment updatedComment = commentRepository.save(existingComment);
-        return ResponseEntity.ok(updatedComment);
+        return ResponseEntity.ok("Comment updated successfully");
 
     }
 
