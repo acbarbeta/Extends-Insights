@@ -9,9 +9,9 @@ import java.util.List;
 
 @Getter
 public class PublicationRequest {
-    private String title;
-    private String content;
-    private User user;
+    private String publicationTitle;
+    private String publicationBody;
+    private User author;
     private Category category;
-    private List<Tag> tag;
+    private List<Tag> tags;
 }
