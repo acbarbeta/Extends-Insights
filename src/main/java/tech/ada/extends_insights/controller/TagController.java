@@ -48,7 +48,7 @@ public class TagController {
             @ApiResponse(responseCode = "200", description = "Tags found"),
             @ApiResponse(responseCode = "404", description = "Tags not found")
     })
-    @GetMapping("/tags")
+    @GetMapping("/tags/get-all")
     public ResponseEntity<List<Tag>> getAllTags() {
         List<Tag> allTags = tagRepository.findAll();
         return ResponseEntity.ok(allTags);
