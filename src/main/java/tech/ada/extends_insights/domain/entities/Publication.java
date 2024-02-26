@@ -1,5 +1,6 @@
 package tech.ada.extends_insights.domain.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -14,6 +15,7 @@ import java.util.List;
 @Setter
 @Getter
 @EqualsAndHashCode
+@JsonIgnoreProperties({"comments"})
 public class Publication {
 
     @Id
