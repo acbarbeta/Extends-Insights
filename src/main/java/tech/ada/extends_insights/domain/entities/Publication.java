@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.UpdateTimestamp;
 import tech.ada.extends_insights.domain.enums.Category;
 
 import java.time.LocalDateTime;
@@ -32,6 +33,7 @@ public class Publication {
     @OneToMany(mappedBy = "publication")
     private List<Comment> comments;
     private LocalDateTime createdOn;
+    @UpdateTimestamp
     private LocalDateTime updatedOn;
 
     public Publication(){
