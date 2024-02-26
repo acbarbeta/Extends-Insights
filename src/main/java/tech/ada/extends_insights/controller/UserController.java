@@ -14,7 +14,6 @@ import tech.ada.extends_insights.domain.models.requests.UserRequest;
 import tech.ada.extends_insights.repository.UserRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController("/users")
 public class UserController {

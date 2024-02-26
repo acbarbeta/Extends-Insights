@@ -103,7 +103,7 @@ public class PublicationController {
             @ApiResponse(responseCode = "200", description = "Publication found"),
             @ApiResponse(responseCode = "404", description = "Publication not found")
     })
-    @GetMapping(value = "/publications-items", params = {"user"})
+    @GetMapping(value = "/publications-items", params = {"author"})
     public ResponseEntity<List<Publication>> getPublicationByUser(@RequestParam User author) {
         List<Publication> publicationByUser = publicationRepository.findByAuthor(author);
         if(publicationByUser == null) {

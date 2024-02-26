@@ -63,9 +63,10 @@ Before getting started, make sure you have the following requirements installed 
 4. **Using the Application on Postman:**
    - Install and open Postman on your machine.
    - In your workspace, select the menu in the upper-right corner and go to File > Import.
-   - Select the `postman` file contained in the `data` folder
+   - Select the `postman` file contained in the `resources > docs` folder
    - Import the collection
-   - You should then see all the queries available in our application.
+   - You should then see all the queries available in our application
+   - Ensure the "Authorization" tab is configured with the credentials you setted up in the `application.properties` file.
 
 5. **Using the Application on Swagger:**
    - Open your browser and go to `http://localhost:8080/swagger-ui.html` to access the Swagger documentation.
