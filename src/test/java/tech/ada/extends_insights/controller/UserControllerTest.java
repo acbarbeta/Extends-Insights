@@ -1,61 +1,65 @@
 package tech.ada.extends_insights.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.beans.factory.annotation.Autowired;
 import tech.ada.extends_insights.domain.entities.User;
 import tech.ada.extends_insights.repository.UserRepository;
+import org.modelmapper.ModelMapper;
+import org.springframework.http.MediaType;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
 
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
-class UserControllerTest {
+public class UserControllerTest {
+
+    private MockMvc mockMvc;
+
     @Mock
     private UserRepository userRepository;
-    private User user;
-    private List<User> userList;
+
+    @Mock
+    private ModelMapper modelMapper;
 
     @InjectMocks
     private UserController userController;
-    private MockMvc mockMvc;
+
+    private User user;
+    private List<User> userList;
 
     @BeforeEach
-    public void setup(){
-        user = new User("usernametest","123456789","email@test.com");
+    public void setup() {
+        user = new User("usernametest", "123456789", "email@test.com");
         mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
     }
 
-    public static String asJsonString(final Object object){
-        try{
-            return new ObjectMapper().writeValueAsString(object);
-        }catch (Exception e){
-            throw new RuntimeException(e);
-        }
-    }
-
     @Test
-    void registerUserHttpTest() throws Exception{
-        when(userRepository.save(Mockito.any())).thenReturn(user);
+    public void registerUserHttpTest() throws Exception {
+        when(modelMapper.map(any(), any())).thenReturn(user);
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/users").
-                contentType(MediaType.APPLICATION_JSON).
-                content(asJsonString(user))).andExpect(status().isCreated());
+        when(userRepository.save(any())).thenReturn(user);
 
-        verify(userRepository, times(1)).save(Mockito.any());
+        mockMvc.perform(post("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(user)))
+                .andExpect(status().isCreated());
+
+        verify(userRepository, times(1)).save(any());
     }
 
     @Test
@@ -73,4 +77,19 @@ class UserControllerTest {
     @Test
     void deleteUserById() {
     }
+
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    static {
+        objectMapper.registerModule(new JavaTimeModule());
+    }
+
+    public static String asJsonString(Object obj) {
+        try {
+            return objectMapper.writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 }

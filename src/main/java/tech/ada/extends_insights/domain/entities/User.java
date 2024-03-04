@@ -1,5 +1,6 @@
 package tech.ada.extends_insights.domain.entities;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.EqualsAndHashCode;
