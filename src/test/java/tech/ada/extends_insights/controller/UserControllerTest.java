@@ -24,8 +24,7 @@ import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
@@ -74,8 +73,22 @@ public class UserControllerTest {
     void getUserByUsername() {
     }
 
-    @Test
-    void changePassword() {
+    void changePassword() throws Exception {
+        Long id = 1L;
+        String newPassword = user.getPassword();
+
+        when(userRepository.findById(id)).thenReturn(Optional.of(user));
+
+        user.setPassword(newPassword);
+        when(userRepository.save(any())).thenReturn(user);
+
+        mockMvc.perform(patch("/users/{id}/password", id)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(newPassword)))
+                .andExpect(status().isOk());
+
+        verify(userRepository, times(1)).findById(id);
+        verify(userRepository, times(1)).save(any());
     }
 
     @Test
