@@ -8,7 +8,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import tech.ada.extends_insights.domain.entities.User;
 import tech.ada.extends_insights.repository.UserRepository;
 import org.modelmapper.ModelMapper;
@@ -53,26 +54,38 @@ public class UserControllerTest {
     @Test
     public void registerUserHttpTest() throws Exception {
         when(modelMapper.map(any(), any())).thenReturn(user);
-
         when(userRepository.save(any())).thenReturn(user);
-
         mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(user)))
                 .andExpect(status().isCreated());
-
         verify(userRepository, times(1)).save(any());
     }
 
-
     @Test
-    void findAllUsers() {
+    void findAllUsers() throws Exception {
+        when(userRepository.findAll()).thenReturn(userList);
+        mockMvc.perform(MockMvcRequestBuilders.get("/users/searchAll")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(user)))
+                .andDo(MockMvcResultHandlers.print());
+        verify(userRepository).findAll();
+        verify(userRepository, times(1)).findAll();
     }
 
     @Test
-    void getUserByUsername() {
+    void getUserByUsername() throws Exception {
+        String username = user.getUsername();
+        when(userRepository.findByUsername(username)).thenReturn(user);
+        mockMvc.perform(MockMvcRequestBuilders.get("/users?username=" + username)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(user)))
+                .andDo(MockMvcResultHandlers.print());
+        verify(userRepository).findByUsername(username);
+        verify(userRepository, times(1)).findByUsername(username);
     }
 
+    @Test
     void changePassword() throws Exception {
         Long id = 1L;
         String newPassword = user.getPassword();
@@ -97,7 +110,6 @@ public class UserControllerTest {
         mockMvc.perform(delete("/users/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
-
         verify(userRepository).delete(user);
     }
 
@@ -114,5 +126,4 @@ public class UserControllerTest {
             throw new RuntimeException(e);
         }
     }
-
 }
