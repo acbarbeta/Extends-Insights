@@ -17,11 +17,14 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -62,6 +65,7 @@ public class UserControllerTest {
         verify(userRepository, times(1)).save(any());
     }
 
+
     @Test
     void findAllUsers() {
     }
@@ -75,7 +79,13 @@ public class UserControllerTest {
     }
 
     @Test
-    void deleteUserById() {
+    public void deleteUserByIdTest() throws Exception {
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
+        mockMvc.perform(delete("/users/{id}", 1)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+
+        verify(userRepository).delete(user);
     }
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
