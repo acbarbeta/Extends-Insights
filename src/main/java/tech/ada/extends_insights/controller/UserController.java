@@ -12,17 +12,18 @@ import tech.ada.extends_insights.domain.entities.User;
 import tech.ada.extends_insights.domain.models.requests.ChangePasswordRequest;
 import tech.ada.extends_insights.domain.models.requests.UserRequest;
 import tech.ada.extends_insights.repository.UserRepository;
+import tech.ada.extends_insights.service.UserService;
 
 import java.util.List;
 
 @RestController("/users")
 public class UserController {
-    private final UserRepository userRepository;
+    private final UserService userService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public UserController(UserRepository userRepository, ModelMapper modelMapper){
-        this.userRepository = userRepository;
+    public UserController(UserService userService, ModelMapper modelMapper){
+        this.userService = userService;
         this.modelMapper = modelMapper;
     }
 
@@ -34,7 +35,7 @@ public class UserController {
     @PostMapping("/users")
     public ResponseEntity<User> registerUser(@RequestBody UserRequest request){
         User convertedUser = modelMapper.map(request, User.class);
-        User newUser = userRepository.save(convertedUser);
+        User newUser = userService.registerUser(convertedUser);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
@@ -46,7 +47,7 @@ public class UserController {
     })
     @GetMapping("/users/searchAll")
     public List<User> findAllUsers(){
-        List<User> registeredUsers = userRepository.findAll();
+        List<User> registeredUsers = userService.getAllUsers();
         return registeredUsers;
     }
 
@@ -58,7 +59,7 @@ public class UserController {
     @GetMapping(value = "users", params = {"username"})
     public User getUserByUsername(@RequestParam String username){
         String userNameNoSpace = username.replaceAll("\\s","");
-        return userRepository.findByUsername(userNameNoSpace);
+        return userService.getUserByUsername(userNameNoSpace);
     }
 
     @Operation(summary = "Change user password")
@@ -66,18 +67,22 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Password updated"),
             @ApiResponse(responseCode = "404", description = "User not found")
     })
-    @PatchMapping("/users/{id}/password")
-    public ResponseEntity<String> changePassword(@PathVariable Long id, @RequestBody ChangePasswordRequest changePasswordRequest) {
-        User user = userRepository.findById(id).orElse(null);
+    @PutMapping("/{id}/password")
+    public ResponseEntity<String> changePassword(@PathVariable Long id, @RequestBody String newPassword) {
+        try {
+            User user = userService.getUserById(id);
 
-        if (user == null) {
-            return ResponseEntity.notFound().build();
+            if (user == null) {
+                return new ResponseEntity<>("Usuário não encontrado", HttpStatus.NOT_FOUND);
+            }
+
+            user.setPassword(newPassword);
+            userService.changePassword(id, newPassword);
+
+            return new ResponseEntity<>("Senha alterada com sucesso", HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Erro ao alterar a senha", HttpStatus.INTERNAL_SERVER_ERROR);
         }
-
-        user.setPassword(changePasswordRequest.getNewPassword());
-        userRepository.save(user);
-
-        return ResponseEntity.ok("Password updated successfully");
     }
 
     @Operation(summary = "Delete user by id")
@@ -87,13 +92,13 @@ public class UserController {
     })
     @DeleteMapping("/users/{id}")
     public ResponseEntity<Void> deleteUserById(@PathVariable Long id) {
-        User user = userRepository.findById(id).orElse(null);
+        User user = userService.getUserById(id);
 
         if(user == null) {
             return ResponseEntity.notFound().build();
         }
 
-        userRepository.delete(user);
+        userService.deleteUserById(id);
         return ResponseEntity.noContent().build();
     }
 }

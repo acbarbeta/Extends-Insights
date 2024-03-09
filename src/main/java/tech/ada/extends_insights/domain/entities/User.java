@@ -56,4 +56,8 @@ public class User {
     this.createdOn = LocalDateTime.now();
     this.updatedOn = null;
   }
+
+    public Long getId() {
+        return userId;
+    }
 }
