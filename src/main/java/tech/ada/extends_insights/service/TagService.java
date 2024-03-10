@@ -1,47 +1,21 @@
 package tech.ada.extends_insights.service;
 
-import org.springframework.stereotype.Service;
 import tech.ada.extends_insights.domain.entities.Publication;
 import tech.ada.extends_insights.domain.entities.Tag;
-import tech.ada.extends_insights.repository.TagRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-@Service
-public class TagService {
-    private final TagRepository tagRepository;
+public interface TagService {
+    public Tag createTag(Tag tag);
 
-    public TagService(TagRepository tagRepository) {
-        this.tagRepository = tagRepository;
-    }
+    List<Tag> readAllTags();
 
-    public Tag createTag(Tag tag){
-        tagRepository.save(tag);
-        return tag;
-    }
+    Optional<Tag> readTagById(Long id);
 
-    public List<Tag> readAllTags(){
-        return tagRepository.findAll();
-    }
+    List<Tag> readTagsByPublication(Publication publication);
 
-    public Optional<Tag> readTagById(Long id){
-        return tagRepository.findById(id);
-    }
-    public List<Tag> readTagsByPublication(Publication publication){
-        return tagRepository.findByPublication(publication);
-    }
+    Tag updateTag(Long id, Tag tag);
 
-    public Tag updateTag(Long id, Tag tag){
-        Tag tagToUpdate = tagRepository.findById(id).orElse(null);
-        if(tagToUpdate != null){
-            tagToUpdate.setTitle(tag.getTitle());
-            tagRepository.save(tagToUpdate);
-        }
-        return tagToUpdate;
-    }
-
-    public void deleteTag(Long id){
-        tagRepository.deleteById(id);
-    }
+    void deleteTag(Long id);
 }

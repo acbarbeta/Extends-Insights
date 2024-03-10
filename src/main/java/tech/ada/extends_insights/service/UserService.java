@@ -1,46 +1,17 @@
 package tech.ada.extends_insights.service;
 
-import org.springframework.stereotype.Service;
+import org.springframework.http.ResponseEntity;
 import tech.ada.extends_insights.domain.entities.User;
-import tech.ada.extends_insights.repository.UserRepository;
+import tech.ada.extends_insights.domain.models.requests.ChangePasswordRequest;
+import tech.ada.extends_insights.domain.models.requests.UserRequest;
 
 import java.util.List;
 
-@Service
-public class UserService {
-    private final UserRepository userRepository;
-
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    public User registerUser(User user) {
-        userRepository.save(user);
-        return user;
-    }
-
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
-    }
-
-    public User getUserById(Long id) {
-        return userRepository.findById(id).orElse(null);
-    }
-
-    public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username);
-    }
-
-    public User changePassword(Long id, String newPassword) {
-        User user = userRepository.findById(id).orElse(null);
-        if (user != null) {
-            user.setPassword(newPassword);
-            userRepository.save(user);
-        }
-        return user;
-    }
-
-    public void deleteUserById(Long id) {
-        userRepository.deleteById(id);
-    }
+public interface UserService {
+    User registerUser(UserRequest request);
+    List<User> findAllUsers();
+    User getUserById(Long id);
+    User getUserByUsername(String username);
+    ResponseEntity<String> changePassword(Long id, ChangePasswordRequest changePasswordRequest);
+    void deleteUserById(Long id);
 }
