@@ -49,16 +49,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ResponseEntity<String> changePassword(Long id, ChangePasswordRequest changePasswordRequest) {
+    public String changePassword(Long id, ChangePasswordRequest changePasswordRequest) {
         Optional<User> optionalUser = userRepository.findById(id);
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
             user.setPassword(changePasswordRequest.getNewPassword());
             userRepository.save(user);
-            return ResponseEntity.ok("Password updated successfully");
+            return "Password changed successfully";
         } else {
-            return ResponseEntity.notFound().build();
+            return "User not found";
         }
     }
 

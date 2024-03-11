@@ -8,23 +8,20 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import tech.ada.extends_insights.domain.entities.User;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import tech.ada.extends_insights.service.UserService;
+import tech.ada.extends_insights.domain.entities.User;
+import tech.ada.extends_insights.domain.models.requests.ChangePasswordRequest;
+import tech.ada.extends_insights.service.impl.UserServiceImpl;
 
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,7 +30,7 @@ public class UserControllerTest {
     private MockMvc mockMvc;
 
     @Mock
-    private UserService userService;
+    private UserServiceImpl userService;
 
     @Mock
     private ModelMapper modelMapper;
@@ -43,18 +40,20 @@ public class UserControllerTest {
 
     private User user;
     private List<User> userList;
+    private ChangePasswordRequest changePasswordRequest;
 
     @BeforeEach
     public void setup() {
-        user = new User("usernametest", "123456789", "email@test.com");
+        user = new User("usernameTest", "123456789", "email@test.com");
+        userList = List.of(user);
+        changePasswordRequest = new ChangePasswordRequest("987654321");
         mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
     }
 
     @Test
     public void registerUserHttpTest() throws Exception {
-        when(modelMapper.map(any(), any())).thenReturn(user);
         when(userService.registerUser(any())).thenReturn(user);
-        mockMvc.perform(post("/users")
+        mockMvc.perform(MockMvcRequestBuilders.post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(user)))
                 .andExpect(status().isCreated());
@@ -62,72 +61,55 @@ public class UserControllerTest {
     }
 
     @Test
-    void findAllUsers() throws Exception {
-        when(userService.getAllUsers()).thenReturn(userList);
+    void findAllUsersHttpTest() throws Exception {
+        when(userService.findAllUsers()).thenReturn(userList);
         mockMvc.perform(MockMvcRequestBuilders.get("/users/searchAll")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(user)))
                 .andDo(MockMvcResultHandlers.print());
-        verify(userService).getAllUsers();
-        verify(userService, times(1)).getAllUsers();
+        verify(userService).findAllUsers();
+        verify(userService, times(1)).findAllUsers();
     }
 
     @Test
-    void getUserByUsername() throws Exception {
-        String username = user.getUsername();
-        when(userService.getUserByUsername(username)).thenReturn(user);
-        mockMvc.perform(MockMvcRequestBuilders.get("/users?username=" + username)
+    void getUserByIdHttpTest() throws Exception {
+        when(userService.getUserById(anyLong())).thenReturn(user);
+        mockMvc.perform(MockMvcRequestBuilders.get("/users/" + anyLong())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(user)))
                 .andDo(MockMvcResultHandlers.print());
-        verify(userService).getUserByUsername(username);
-        verify(userService, times(1)).getUserByUsername(username);
-    }
-
-//    @Test
-//    void changePassword() throws Exception {
-//        Long id = user.getId();
-//        String newPassword = user.getPassword();
-//
-//        when(userService.getUserById(id)).thenReturn(user);
-//
-//        user.setPassword(newPassword);
-//        when(userService.registerUser(any())).thenReturn(user);
-//
-//        mockMvc.perform(patch("/users/{id}/password", id)
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .content(asJsonString(newPassword)))
-//                .andExpect(status().isOk());
-//
-//        verify(userService, times(1)).getUserById(id);
-//        verify(userService, times(1)).registerUser(any());
-//    }
-
-    @Test
-    void changePassword() throws Exception {
-
-        User user = new User();
-        user.setPassword("senhaAntiga");
-
-        when(userService.getUserById(anyLong())).thenReturn(user);
-        when(userService.registerUser(any())).thenReturn(user);
-
-        mockMvc.perform(patch("/users/{id}/password", 1L)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString("novaSenha")))
-                .andExpect(status().isOk());
-
+        verify(userService).getUserById(anyLong());
         verify(userService, times(1)).getUserById(anyLong());
-        verify(userService, times(1)).registerUser(any());
     }
 
     @Test
-    public void deleteUserByIdTest() throws Exception {
-        when(userService.getUserById(anyLong())).thenReturn(user);
-        mockMvc.perform(delete("/users/{id}", 1)
-                        .contentType(MediaType.APPLICATION_JSON))
+    void getUserByUsernameHttpTest() throws Exception {
+        when(userService.getUserByUsername(anyString())).thenReturn(user);
+        mockMvc.perform(MockMvcRequestBuilders.get("/users/users?username=" + anyString())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(user)))
+                .andDo(MockMvcResultHandlers.print());
+        verify(userService).getUserByUsername(anyString());
+        verify(userService, times(1)).getUserByUsername(anyString());
+    }
+
+    @Test
+    void changePasswordHttpTest() throws Exception {
+        when(userService.changePassword(anyLong(), any())).thenReturn("Password changed successfully");
+        mockMvc.perform(MockMvcRequestBuilders.patch("/users/{id}/password", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(changePasswordRequest)))
+                .andExpect(status().isOk());
+        verify(userService, times(1)).changePassword(anyLong(), any());
+    }
+
+    @Test
+    public void deleteUserByIdHttpTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/users/{id}", anyLong())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(user)))
                 .andExpect(status().isNoContent());
-        verify(userService).deleteUserById(anyLong());
+        verify(userService, times(1)).deleteUserById(anyLong());
     }
 
     private static final ObjectMapper objectMapper = new ObjectMapper();

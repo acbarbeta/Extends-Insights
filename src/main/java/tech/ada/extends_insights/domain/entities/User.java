@@ -1,11 +1,9 @@
 package tech.ada.extends_insights.domain.entities;
 
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.validation.constraints.Email;
@@ -20,6 +18,7 @@ import java.util.List;
 @Setter
 @Getter
 @EqualsAndHashCode
+@AllArgsConstructor
 @JsonIgnoreProperties({"publications", "comments"})
 public class User {
   @Id
@@ -27,10 +26,11 @@ public class User {
   private Long userId;
   @Column(unique = true)
   @NotBlank(message = "This attribute is requeried!")
-  @Size(min = 4, max = 20,message = "This attribute must contain at least 4 characters and a maximum of 20")
+  @Size(min = 4, max = 20, message = "This attribute must contain at least 4 characters and a maximum of 20")
   private String username;
   @NotBlank(message = "This attribute is requeried!")
   @Size(min = 8, message = "This attribute must contain at least 8 characters")
+  @JsonIgnore
   private String password;
   @Email
   @Column(unique = true)
@@ -57,7 +57,10 @@ public class User {
     this.updatedOn = null;
   }
 
-    public Long getId() {
-        return userId;
-    }
+  public User(Long userId, String username, String password, String email) {
+    this.userId = userId;
+    this.username = username;
+    this.password = password;
+    this.email = email;
+  }
 }
