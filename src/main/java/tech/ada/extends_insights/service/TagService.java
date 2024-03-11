@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TagService {
-    public Tag createTag(TagRequest tagRequest);
+    Tag createTag(TagRequest tagRequest);
 
     List<Tag> readAllTags();
 

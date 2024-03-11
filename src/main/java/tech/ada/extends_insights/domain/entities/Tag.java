@@ -18,4 +18,8 @@ public class Tag {
     private String title;
     @ManyToOne
     private Publication publication;
+
+    public Tag(String title) {
+        this.title = title;
+    }
 }

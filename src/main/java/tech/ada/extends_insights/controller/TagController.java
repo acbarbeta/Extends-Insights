@@ -12,7 +12,7 @@ import tech.ada.extends_insights.domain.entities.Publication;
 import tech.ada.extends_insights.domain.entities.Tag;
 import tech.ada.extends_insights.domain.models.requests.TagRequest;
 import tech.ada.extends_insights.domain.models.requests.UpdateTagRequest;
-import tech.ada.extends_insights.service.impl.TagServiceImpl;
+import tech.ada.extends_insights.service.TagService;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,11 +20,11 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/tags")
 public class TagController {
-    private final TagServiceImpl tagService;
+    private final TagService tagService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public TagController(TagServiceImpl tagService, ModelMapper modelMapper) {
+    public TagController(TagService tagService, ModelMapper modelMapper) {
         this.tagService = tagService;
         this.modelMapper = modelMapper;
     }
@@ -47,8 +47,7 @@ public class TagController {
     })
     @GetMapping("/getAll")
     public ResponseEntity<List<Tag>> getAllTags() {
-        List<Tag> allTags = tagService.readAllTags();
-        return ResponseEntity.ok(allTags);
+        return ResponseEntity.ok(tagService.readAllTags());
     }
 
     @Operation(summary = "Get tags by publication")
@@ -90,9 +89,6 @@ public class TagController {
     })
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTag(@PathVariable Long id) {
-        if (tagService.readTagById(id).isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
         tagService.deleteTag(id);
         return ResponseEntity.noContent().build();
     }

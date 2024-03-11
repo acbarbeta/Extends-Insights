@@ -17,8 +17,8 @@ import tech.ada.extends_insights.service.impl.TagServiceImpl;
 
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static tech.ada.extends_insights.controller.UserControllerTest.asJsonString;
 
@@ -42,19 +42,22 @@ class TagControllerTest {
 
     @BeforeEach
     public void setup() {
-        tagRequest = new TagRequest("tag");
+        //Arrange
+        tag = new Tag("tagTitle");
+        tagRequest = new TagRequest("tagTitle");
         tagList = List.of(tag);
         mockMvc = MockMvcBuilders.standaloneSetup(tagController).build();
     }
 
     @Test
-    void createTag() throws Exception {
-        when(tagService.createTag(any())).thenReturn(tag);
-        mockMvc.perform(MockMvcRequestBuilders.post("/tags")
+    public void createTagHttpTest() throws Exception {
+        when(tagService.createTag(tagRequest)).thenReturn(tag);
+        var response = mockMvc.perform(MockMvcRequestBuilders.post("/tags")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(tag)))
                 .andExpect(status().isCreated());
-        verify(tagService, times(1)).createTag(any());
+        response.andExpect(jsonPath("$.title").value(tag.getTitle()));
+        //verify(tagService, times(1)).createTag(any());
     }
 
     @Test
