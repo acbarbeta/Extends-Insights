@@ -1,9 +1,12 @@
 package tech.ada.extends_insights.service.impl;
 
 import org.modelmapper.ModelMapper;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import tech.ada.extends_insights.domain.entities.Publication;
 import tech.ada.extends_insights.domain.entities.Tag;
+import tech.ada.extends_insights.domain.models.requests.TagRequest;
+import tech.ada.extends_insights.domain.models.requests.UpdateTagRequest;
 import tech.ada.extends_insights.repository.TagRepository;
 import tech.ada.extends_insights.service.TagService;
 
@@ -20,9 +23,10 @@ public class TagServiceImpl implements TagService {
         this.modelMapper = new ModelMapper();
     }
 
-    public Tag createTag(Tag tag){
-        tagRepository.save(tag);
-        return tag;
+    @Override
+    public Tag createTag(TagRequest tagRequest){
+        Tag convertedTag = modelMapper.map(tagRequest, Tag.class);
+        return tagRepository.save(convertedTag);
     }
 
     public List<Tag> readAllTags(){
@@ -30,22 +34,31 @@ public class TagServiceImpl implements TagService {
     }
 
     public Optional<Tag> readTagById(Long id){
-        return tagRepository.findById(id);
+        Optional<Tag> optionalTag = tagRepository.findById(id);
+        return optionalTag;
     }
+
     public List<Tag> readTagsByPublication(Publication publication){
         return tagRepository.findByPublication(publication);
     }
 
-    public Tag updateTag(Long id, Tag tag){
+    public Tag updateTag(Long id, UpdateTagRequest updateTagRequest){
         Tag tagToUpdate = tagRepository.findById(id).orElse(null);
         if(tagToUpdate != null){
-            tagToUpdate.setTitle(tag.getTitle());
+            tagToUpdate.setTitle(updateTagRequest.getTitle());
             tagRepository.save(tagToUpdate);
         }
         return tagToUpdate;
     }
 
     public void deleteTag(Long id){
-        tagRepository.deleteById(id);
+        Optional<Tag> optionalTag = tagRepository.findById(id);
+
+        if (optionalTag.isPresent()) {
+            tagRepository.delete(optionalTag.get());
+            ResponseEntity.noContent().build();
+        } else {
+            ResponseEntity.notFound().build();
+        }
     }
 }

@@ -12,19 +12,19 @@ import tech.ada.extends_insights.domain.entities.Publication;
 import tech.ada.extends_insights.domain.entities.Tag;
 import tech.ada.extends_insights.domain.models.requests.TagRequest;
 import tech.ada.extends_insights.domain.models.requests.UpdateTagRequest;
-import tech.ada.extends_insights.repository.TagRepository;
-import tech.ada.extends_insights.service.TagService;
+import tech.ada.extends_insights.service.impl.TagServiceImpl;
 
 import java.util.List;
 import java.util.Optional;
 
-@RestController("/tags")
+@RestController
+@RequestMapping("/tags")
 public class TagController {
-    private final TagService tagService;
+    private final TagServiceImpl tagService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public TagController(TagService tagService, ModelMapper modelMapper) {
+    public TagController(TagServiceImpl tagService, ModelMapper modelMapper) {
         this.tagService = tagService;
         this.modelMapper = modelMapper;
     }
@@ -34,11 +34,9 @@ public class TagController {
             @ApiResponse(responseCode = "201", description = "Tag created"),
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
-    @PostMapping("/tags-creation")
+    @PostMapping
     public ResponseEntity<Tag> createTag(@RequestBody TagRequest request) {
-        Tag convertedTag = modelMapper.map(request, Tag.class);
-        Tag newTag = tagService.createTag(convertedTag);
-
+        Tag newTag = tagService.createTag(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(newTag);
     }
 
@@ -47,21 +45,21 @@ public class TagController {
             @ApiResponse(responseCode = "200", description = "Tags found"),
             @ApiResponse(responseCode = "404", description = "Tags not found")
     })
-    @GetMapping("/tags/get-all")
+    @GetMapping("/getAll")
     public ResponseEntity<List<Tag>> getAllTags() {
         List<Tag> allTags = tagService.readAllTags();
         return ResponseEntity.ok(allTags);
     }
 
-    @Operation(summary = "Get tag by publication")
+    @Operation(summary = "Get tags by publication")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Tag found"),
-            @ApiResponse(responseCode = "404", description = "Tag not found")
+            @ApiResponse(responseCode = "200", description = "Tags found"),
+            @ApiResponse(responseCode = "404", description = "Tags not found")
     })
-    @GetMapping(value = "/tags", params = {"publicationId"})
+    @GetMapping(params = {"publicationId"})
     public ResponseEntity<List<Tag>> getTagsByPublication(@RequestParam Publication publication) {
         List<Tag> tagsByPublication = tagService.readTagsByPublication(publication);
-        if(tagsByPublication == null) {
+        if (tagsByPublication.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(tagsByPublication);
@@ -72,16 +70,14 @@ public class TagController {
             @ApiResponse(responseCode = "200", description = "Tag updated"),
             @ApiResponse(responseCode = "404", description = "Tag not found")
     })
-    @PatchMapping("/tags/{id}")
-    public ResponseEntity<Tag> updateTag(
-            @PathVariable Long id,
-            @RequestBody UpdateTagRequest request) throws Exception {
+    @PatchMapping("/{id}")
+    public ResponseEntity<Tag> updateTag(@PathVariable Long id, @RequestBody UpdateTagRequest request) {
         Optional<Tag> optionalTag = tagService.readTagById(id);
-        if(optionalTag.isPresent()) {
+        if (optionalTag.isPresent()) {
             Tag tag = optionalTag.get();
             tag.setTitle(request.getTitle());
-            Tag updateTag = tagService.updateTag(id, tag);
-            return ResponseEntity.ok(updateTag);
+            Tag updatedTag = tagService.updateTag(id, request);
+            return ResponseEntity.ok(updatedTag);
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -92,13 +88,11 @@ public class TagController {
             @ApiResponse(responseCode = "204", description = "Tag deleted"),
             @ApiResponse(responseCode = "404", description = "Tag not found")
     })
-    @DeleteMapping("/tags/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTag(@PathVariable Long id) {
-        Optional<Tag> tagOptional = tagService.readTagById(id);
-        if (tagOptional.isEmpty()) {
+        if (tagService.readTagById(id).isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-
         tagService.deleteTag(id);
         return ResponseEntity.noContent().build();
     }
