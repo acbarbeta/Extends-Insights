@@ -34,7 +34,7 @@ public class TagController {
             @ApiResponse(responseCode = "201", description = "Tag created"),
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
-    @PostMapping
+    @PostMapping("/tags-creation")
     public ResponseEntity<Tag> createTag(@RequestBody TagRequest request) {
         Tag newTag = tagService.createTag(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(newTag);
@@ -45,7 +45,7 @@ public class TagController {
             @ApiResponse(responseCode = "200", description = "Tags found"),
             @ApiResponse(responseCode = "404", description = "Tags not found")
     })
-    @GetMapping("/getAll")
+    @GetMapping("/tags/get-all")
     public ResponseEntity<List<Tag>> getAllTags() {
         return ResponseEntity.ok(tagService.readAllTags());
     }
@@ -55,7 +55,7 @@ public class TagController {
             @ApiResponse(responseCode = "200", description = "Tags found"),
             @ApiResponse(responseCode = "404", description = "Tags not found")
     })
-    @GetMapping(params = {"publicationId"})
+    @GetMapping(value = "/tags", params = {"publicationId"})
     public ResponseEntity<List<Tag>> getTagsByPublication(@RequestParam Publication publication) {
         List<Tag> tagsByPublication = tagService.readTagsByPublication(publication);
         if (tagsByPublication.isEmpty()) {
@@ -69,7 +69,7 @@ public class TagController {
             @ApiResponse(responseCode = "200", description = "Tag updated"),
             @ApiResponse(responseCode = "404", description = "Tag not found")
     })
-    @PatchMapping("/{id}")
+    @PatchMapping("/tags/{id}")
     public ResponseEntity<Tag> updateTag(@PathVariable Long id, @RequestBody UpdateTagRequest request) {
         Optional<Tag> optionalTag = tagService.readTagById(id);
         if (optionalTag.isPresent()) {
@@ -87,7 +87,7 @@ public class TagController {
             @ApiResponse(responseCode = "204", description = "Tag deleted"),
             @ApiResponse(responseCode = "404", description = "Tag not found")
     })
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/tags/{id}")
     public ResponseEntity<Void> deleteTag(@PathVariable Long id) {
         tagService.deleteTag(id);
         return ResponseEntity.noContent().build();

@@ -1,5 +1,7 @@
 package tech.ada.extends_insights.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +27,6 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static tech.ada.extends_insights.controller.UserControllerTest.asJsonString;
 
 @ExtendWith(MockitoExtension.class)
 class PublicationControllerTest {
@@ -157,5 +158,19 @@ class PublicationControllerTest {
                         .content(asJsonString(publication)))
                 .andExpect(status().isOk());
         verify(publicationService, times(1)).deletePublication(anyLong());
+    }
+
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    static {
+        objectMapper.registerModule(new JavaTimeModule());
+    }
+
+    public static String asJsonString(Object obj) {
+        try {
+            return objectMapper.writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

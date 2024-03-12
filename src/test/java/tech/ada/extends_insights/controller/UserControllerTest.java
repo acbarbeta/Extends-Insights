@@ -20,8 +20,10 @@ import tech.ada.extends_insights.service.impl.UserServiceImpl;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
@@ -52,7 +54,6 @@ public class UserControllerTest {
 
     @Test
     public void registerUserHttpTest() throws Exception {
-        when(userService.registerUser(any())).thenReturn(user);
         mockMvc.perform(MockMvcRequestBuilders.post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(user)))
@@ -66,9 +67,8 @@ public class UserControllerTest {
         mockMvc.perform(MockMvcRequestBuilders.get("/users/searchAll")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(user)))
-                .andDo(MockMvcResultHandlers.print());
-        verify(userService).findAllUsers();
-        verify(userService, times(1)).findAllUsers();
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(jsonPath("$.[1].id", equalTo(2)));
     }
 
     @Test
