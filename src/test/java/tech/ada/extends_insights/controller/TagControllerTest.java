@@ -21,6 +21,7 @@ import tech.ada.extends_insights.service.impl.TagServiceImpl;
 
 import java.util.List;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -62,7 +63,8 @@ class TagControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(tagRequest)))
                 .andExpect(status().isCreated());
-        response.andExpect(jsonPath("$.title").value(tag.getTitle()));
+        response.andExpect(jsonPath("$.title", equalTo(tag.getTitle())));
+
         //verify(tagService, times(1)).createTag(any());
     }
 

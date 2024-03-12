@@ -46,7 +46,7 @@ public class UserControllerTest {
 
     @BeforeEach
     public void setup() {
-        user = new User("usernameTest", "123456789", "email@test.com");
+        user = new User(1L,"usernameTest", "123456789", "email@test.com");
         userList = List.of(user);
         changePasswordRequest = new ChangePasswordRequest("987654321");
         mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
@@ -65,37 +65,31 @@ public class UserControllerTest {
     void findAllUsersHttpTest() throws Exception {
         when(userService.findAllUsers()).thenReturn(userList);
         mockMvc.perform(MockMvcRequestBuilders.get("/users/searchAll")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(user)))
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(jsonPath("$.[1].id", equalTo(2)));
+                .andExpect(jsonPath("$.[0].userId", equalTo(1)));
     }
 
     @Test
     void getUserByIdHttpTest() throws Exception {
-        when(userService.getUserById(anyLong())).thenReturn(user);
         mockMvc.perform(MockMvcRequestBuilders.get("/users/" + anyLong())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(user)))
                 .andDo(MockMvcResultHandlers.print());
-        verify(userService).getUserById(anyLong());
         verify(userService, times(1)).getUserById(anyLong());
     }
 
     @Test
     void getUserByUsernameHttpTest() throws Exception {
-        when(userService.getUserByUsername(anyString())).thenReturn(user);
         mockMvc.perform(MockMvcRequestBuilders.get("/users/users?username=" + anyString())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(user)))
                 .andDo(MockMvcResultHandlers.print());
-        verify(userService).getUserByUsername(anyString());
         verify(userService, times(1)).getUserByUsername(anyString());
     }
 
     @Test
     void changePasswordHttpTest() throws Exception {
-        when(userService.changePassword(anyLong(), any())).thenReturn("Password changed successfully");
         mockMvc.perform(MockMvcRequestBuilders.patch("/users/{id}/password", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(changePasswordRequest)))
