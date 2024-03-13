@@ -81,8 +81,7 @@ class TagControllerTest {
 //TODO: MUDANÇAS FEITAS EM 12/03 E COM ERROS - GETTAGSBYPUBLICATION E UPDATETAGHTTPTEST
     @Test
     void getTagsByPublication() throws Exception {
-        when(tagService.readTagsByPublication(publication)).thenReturn(tagList);
-        mockMvc.perform(MockMvcRequestBuilders.get("/tags/{publicationId}", anyLong())
+        mockMvc.perform(MockMvcRequestBuilders.get("/tags/tags/{publicationId}", 1L)
                         .contentType(MediaType.APPLICATION_JSON))
                         .andDo(MockMvcResultHandlers.print())
                 .andExpect(jsonPath("$.[0].id", equalTo(1)));
