@@ -5,4 +5,8 @@ import lombok.Getter;
 @Getter
 public class UpdateTagRequest {
     private String title;
+
+    public UpdateTagRequest(){}
+
+    public UpdateTagRequest(String title) {this.title = title;}
 }

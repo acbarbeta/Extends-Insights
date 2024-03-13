@@ -11,18 +11,20 @@ import org.springframework.web.bind.annotation.*;
 import tech.ada.extends_insights.domain.entities.User;
 import tech.ada.extends_insights.domain.models.requests.ChangePasswordRequest;
 import tech.ada.extends_insights.domain.models.requests.UserRequest;
-import tech.ada.extends_insights.repository.UserRepository;
+import tech.ada.extends_insights.service.UserService;
 
 import java.util.List;
 
-@RestController("/users")
+@RestController
+@RequestMapping("/users")
 public class UserController {
-    private final UserRepository userRepository;
+
+    private final UserService userService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public UserController(UserRepository userRepository, ModelMapper modelMapper){
-        this.userRepository = userRepository;
+    public UserController(UserService userService, ModelMapper modelMapper) {
+        this.userService = userService;
         this.modelMapper = modelMapper;
     }
 
@@ -31,11 +33,9 @@ public class UserController {
             @ApiResponse(responseCode = "201", description = "User created"),
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
-    @PostMapping("/users")
-    public ResponseEntity<User> registerUser(@RequestBody UserRequest request){
-        User convertedUser = modelMapper.map(request, User.class);
-        User newUser = userRepository.save(convertedUser);
-
+    @PostMapping
+    public ResponseEntity<User> registerUser(@RequestBody UserRequest request) {
+        User newUser = userService.registerUser(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
 
@@ -44,10 +44,19 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Users found"),
             @ApiResponse(responseCode = "404", description = "Users not found")
     })
-    @GetMapping("/users/searchAll")
-    public List<User> findAllUsers(){
-        List<User> registeredUsers = userRepository.findAll();
-        return registeredUsers;
+    @GetMapping("/searchAll")
+    public ResponseEntity<List<User>> findAllUsers() {
+        return ResponseEntity.ok().body(userService.findAllUsers());
+    }
+
+    @Operation(summary = "Get user by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User found"),
+            @ApiResponse(responseCode = "404", description = "User not found")
+    })
+    @GetMapping("/{id}")
+    public ResponseEntity<User> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok().body(userService.getUserById(id));
     }
 
     @Operation(summary = "Get user by username")
@@ -56,9 +65,8 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "User not found")
     })
     @GetMapping(value = "users", params = {"username"})
-    public User getUserByUsername(@RequestParam String username){
-        String userNameNoSpace = username.replaceAll("\\s","");
-        return userRepository.findByUsername(userNameNoSpace);
+    public ResponseEntity<User> getUserByUsername(@RequestParam String username) {
+        return ResponseEntity.ok().body(userService.getUserByUsername(username));
     }
 
     @Operation(summary = "Change user password")
@@ -66,18 +74,9 @@ public class UserController {
             @ApiResponse(responseCode = "200", description = "Password updated"),
             @ApiResponse(responseCode = "404", description = "User not found")
     })
-    @PatchMapping("/users/{id}/password")
+    @PatchMapping("/{id}/password")
     public ResponseEntity<String> changePassword(@PathVariable Long id, @RequestBody ChangePasswordRequest changePasswordRequest) {
-        User user = userRepository.findById(id).orElse(null);
-
-        if (user == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        user.setPassword(changePasswordRequest.getNewPassword());
-        userRepository.save(user);
-
-        return ResponseEntity.ok("Password updated successfully");
+        return ResponseEntity.ok().body(userService.changePassword(id, changePasswordRequest));
     }
 
     @Operation(summary = "Delete user by id")
@@ -85,15 +84,9 @@ public class UserController {
             @ApiResponse(responseCode = "204", description = "User deleted"),
             @ApiResponse(responseCode = "404", description = "User not found")
     })
-    @DeleteMapping("/users/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUserById(@PathVariable Long id) {
-        User user = userRepository.findById(id).orElse(null);
-
-        if(user == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        userRepository.delete(user);
+        userService.deleteUserById(id);
         return ResponseEntity.noContent().build();
     }
 }

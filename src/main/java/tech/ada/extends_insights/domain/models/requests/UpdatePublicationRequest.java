@@ -11,5 +11,5 @@ public class UpdatePublicationRequest {
     private String title;
     private String content;
     private Category category;
-    private List<Tag> tag;
+    private List<Tag> tags;
 }

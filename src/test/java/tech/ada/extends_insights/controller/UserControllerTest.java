@@ -8,24 +8,22 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import tech.ada.extends_insights.domain.entities.User;
-import tech.ada.extends_insights.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import tech.ada.extends_insights.domain.entities.User;
+import tech.ada.extends_insights.domain.models.requests.ChangePasswordRequest;
+import tech.ada.extends_insights.service.impl.UserServiceImpl;
 
 import java.util.List;
-import java.util.Optional;
 
+import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
@@ -34,7 +32,7 @@ public class UserControllerTest {
     private MockMvc mockMvc;
 
     @Mock
-    private UserRepository userRepository;
+    private UserServiceImpl userService;
 
     @Mock
     private ModelMapper modelMapper;
@@ -44,73 +42,68 @@ public class UserControllerTest {
 
     private User user;
     private List<User> userList;
+    private ChangePasswordRequest changePasswordRequest;
 
     @BeforeEach
     public void setup() {
-        user = new User("usernametest", "123456789", "email@test.com");
+        user = new User(1L,"usernameTest", "123456789", "email@test.com");
+        userList = List.of(user);
+        changePasswordRequest = new ChangePasswordRequest("987654321");
         mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
     }
 
     @Test
     public void registerUserHttpTest() throws Exception {
-        when(modelMapper.map(any(), any())).thenReturn(user);
-        when(userRepository.save(any())).thenReturn(user);
-        mockMvc.perform(post("/users")
+        mockMvc.perform(MockMvcRequestBuilders.post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(user)))
                 .andExpect(status().isCreated());
-        verify(userRepository, times(1)).save(any());
+        verify(userService, times(1)).registerUser(any());
     }
 
     @Test
-    void findAllUsers() throws Exception {
-        when(userRepository.findAll()).thenReturn(userList);
+    void findAllUsersHttpTest() throws Exception {
+        when(userService.findAllUsers()).thenReturn(userList);
         mockMvc.perform(MockMvcRequestBuilders.get("/users/searchAll")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(user)))
-                .andDo(MockMvcResultHandlers.print());
-        verify(userRepository).findAll();
-        verify(userRepository, times(1)).findAll();
-    }
-
-    @Test
-    void getUserByUsername() throws Exception {
-        String username = user.getUsername();
-        when(userRepository.findByUsername(username)).thenReturn(user);
-        mockMvc.perform(MockMvcRequestBuilders.get("/users?username=" + username)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(user)))
-                .andDo(MockMvcResultHandlers.print());
-        verify(userRepository).findByUsername(username);
-        verify(userRepository, times(1)).findByUsername(username);
-    }
-
-    @Test
-    void changePassword() throws Exception {
-        Long id = 1L;
-        String newPassword = user.getPassword();
-
-        when(userRepository.findById(id)).thenReturn(Optional.of(user));
-
-        user.setPassword(newPassword);
-        when(userRepository.save(any())).thenReturn(user);
-
-        mockMvc.perform(patch("/users/{id}/password", id)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(newPassword)))
-                .andExpect(status().isOk());
-
-        verify(userRepository, times(1)).findById(id);
-        verify(userRepository, times(1)).save(any());
-    }
-
-    @Test
-    public void deleteUserByIdTest() throws Exception {
-        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
-        mockMvc.perform(delete("/users/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(jsonPath("$.[0].userId", equalTo(1)));
+    }
+
+    @Test
+    void getUserByIdHttpTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/users/" + anyLong())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(user)))
+                .andDo(MockMvcResultHandlers.print());
+        verify(userService, times(1)).getUserById(anyLong());
+    }
+
+    @Test
+    void getUserByUsernameHttpTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/users/users?username=" + anyString())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(user)))
+                .andDo(MockMvcResultHandlers.print());
+        verify(userService, times(1)).getUserByUsername(anyString());
+    }
+
+    @Test
+    void changePasswordHttpTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.patch("/users/{id}/password", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(asJsonString(changePasswordRequest)))
+                .andExpect(status().isOk());
+        verify(userService, times(1)).changePassword(anyLong(), any());
+    }
+
+    @Test
+    public void deleteUserByIdHttpTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/users/{id}", anyLong())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(user)))
                 .andExpect(status().isNoContent());
-        verify(userRepository).delete(user);
+        verify(userService, times(1)).deleteUserById(anyLong());
     }
 
     private static final ObjectMapper objectMapper = new ObjectMapper();
