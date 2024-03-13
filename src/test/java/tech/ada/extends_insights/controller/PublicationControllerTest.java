@@ -48,11 +48,8 @@ class PublicationControllerTest {
     private UpdatePublicationRequest updatePublicationRequest;
 
     private User user;
-
     private Category category;
-
     private Tag tag;
-
     private List<Tag> tagList;
 
     @BeforeEach
@@ -152,11 +149,11 @@ class PublicationControllerTest {
     }
 
     @Test
-    void deletePublication() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/publications-items/{id}", anyLong())
+    public void deletePublicationHttpTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/publications-items/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(publication)))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
         verify(publicationService, times(1)).deletePublication(anyLong());
     }
 
