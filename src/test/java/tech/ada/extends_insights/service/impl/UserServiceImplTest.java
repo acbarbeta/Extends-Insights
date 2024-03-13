@@ -15,6 +15,7 @@ import tech.ada.extends_insights.domain.models.requests.ChangePasswordRequest;
 import tech.ada.extends_insights.domain.models.requests.UserRequest;
 import tech.ada.extends_insights.repository.UserRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -38,6 +39,7 @@ class UserServiceImplTest {
     private UserRequest userRequest;
     private Optional<User> optionalUser;
     private ChangePasswordRequest changePasswordRequest;
+    private List<User> userList;
 
 
     @BeforeEach
@@ -47,6 +49,7 @@ class UserServiceImplTest {
         optionalUser = Optional.of(user);
         userRequest = new UserRequest(USERNAME, PASSWORD, EMAIL);
         changePasswordRequest = new ChangePasswordRequest(PASSWORD);
+        userList = List.of(user);
     }
 
     @DisplayName("Should register a new user successfully")
@@ -58,17 +61,12 @@ class UserServiceImplTest {
         assertEquals(USERNAME, registerUser.getUsername());
     }
 
-//    @Test
-//    void findAllUsers() {
-//        UserRequest userRequest = new UserRequest(USERNAME, PASSWORD, EMAIL);
-//        this.createUser(userRequest);
-//
-//        List<User> foundedUser = this.userRepository.findAll();
-//        Assertions.assertTrue(foundedUser.size() > 0);
-////        Mockito.when(userRepository.findAll()).thenReturn(List.of(user));
-////        List<User> allUsers = userService.findAllUsers();
-////        Assertions.assertEquals(allUsers, List.of(user));
-//    }
+    @Test
+    void findAllUsers() {
+        Mockito.when(userRepository.findAll()).thenReturn(userList);
+        List<User> allUsers = userService.findAllUsers();
+        assertEquals(userList, allUsers);
+    }
 
     @Test
     void getUserById() {
