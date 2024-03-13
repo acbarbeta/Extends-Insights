@@ -17,6 +17,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import tech.ada.extends_insights.domain.entities.Publication;
 import tech.ada.extends_insights.domain.entities.Tag;
 import tech.ada.extends_insights.domain.models.requests.TagRequest;
+import tech.ada.extends_insights.domain.models.requests.UpdateTagRequest;
 import tech.ada.extends_insights.service.impl.TagServiceImpl;
 
 import java.util.List;
@@ -41,6 +42,8 @@ class TagControllerTest {
     @InjectMocks
     private TagController tagController;
 
+    private UpdateTagRequest updateTagRequest;
+
     private Tag tag;
     private TagRequest tagRequest;
     private List<Tag> tagList;
@@ -51,6 +54,7 @@ class TagControllerTest {
         //Arrange
         tag = new Tag(1L, "tagTitle", publication);
         tagRequest = new TagRequest("tagTitle");
+        updateTagRequest = new UpdateTagRequest("newTagTitle");
         tagList = List.of(tag);
         publication = new Publication();
         mockMvc = MockMvcBuilders.standaloneSetup(tagController).build();
@@ -74,7 +78,7 @@ class TagControllerTest {
         .andExpect(jsonPath("$.[0].title", equalTo("tagTitle")));
     }
 
-
+//TODO: MUDANÇAS FEITAS EM 12/03 E COM ERROS - GETTAGSBYPUBLICATION E UPDATETAGHTTPTEST
     @Test
     void getTagsByPublication() throws Exception {
         when(tagService.readTagsByPublication(publication)).thenReturn(tagList);
@@ -85,12 +89,12 @@ class TagControllerTest {
     }
 
     @Test
-    void updateTag() throws Exception {
+    void updateTagHttpTest() throws Exception {
         when(tagService.updateTag(anyLong(), any())).thenReturn(tag);
-        mockMvc.perform(MockMvcRequestBuilders.put("/tags/{id}", anyLong())
+        mockMvc.perform(MockMvcRequestBuilders.patch("/tags/tags/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(tagRequest)))
-                .andExpect(status().isOk());
+                        .content(asJsonString(updateTagRequest)))
+                        .andExpect(status().isOk());
         verify(tagService, times(1)).updateTag(anyLong(), any());
     }
 
