@@ -49,7 +49,7 @@ class TagControllerTest {
     @BeforeEach
     public void setup() {
         //Arrange
-        tag = new Tag("tagTitle");
+        tag = new Tag(1L, "tagTitle", publication);
         tagRequest = new TagRequest("tagTitle");
         tagList = List.of(tag);
         publication = new Publication();
@@ -58,36 +58,30 @@ class TagControllerTest {
 
     @Test
     public void createTagHttpTest() throws Exception {
-        when(tagService.createTag(tagRequest)).thenReturn(tag);
-        var response = mockMvc.perform(MockMvcRequestBuilders.post("/tags/tags-creation")
+        mockMvc.perform(MockMvcRequestBuilders.post("/tags")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(tagRequest)))
                 .andExpect(status().isCreated());
-        response.andExpect(jsonPath("$.title", equalTo(tag.getTitle())));
-
-        //verify(tagService, times(1)).createTag(any());
+        verify(tagService, times(1)).createTag(any());
     }
 
     @Test
     void getAllTags() throws Exception {
         when(tagService.readAllTags()).thenReturn(tagList);
         mockMvc.perform(MockMvcRequestBuilders.get("/tags/tags/get-all")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(tag)))
-                .andDo(MockMvcResultHandlers.print());
-        verify(tagService).readAllTags();
-        verify(tagService, times(1)).readAllTags();
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+        .andExpect(jsonPath("$.[0].title", equalTo("tagTitle")));
     }
+
 
     @Test
     void getTagsByPublication() throws Exception {
         when(tagService.readTagsByPublication(publication)).thenReturn(tagList);
         mockMvc.perform(MockMvcRequestBuilders.get("/tags/{publicationId}", anyLong())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(publication)))
-                        .andDo(MockMvcResultHandlers.print());
-        verify(tagService).readTagsByPublication(publication);
-        verify(tagService, times(1)).readTagsByPublication(publication);
+                        .contentType(MediaType.APPLICATION_JSON))
+                        .andDo(MockMvcResultHandlers.print())
+                .andExpect(jsonPath("$.[0].id", equalTo(1)));
     }
 
     @Test

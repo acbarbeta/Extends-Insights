@@ -34,7 +34,7 @@ public class TagController {
             @ApiResponse(responseCode = "201", description = "Tag created"),
             @ApiResponse(responseCode = "400", description = "Invalid input")
     })
-    @PostMapping("/tags-creation")
+    @PostMapping
     public ResponseEntity<Tag> createTag(@RequestBody TagRequest request) {
         Tag newTag = tagService.createTag(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(newTag);
