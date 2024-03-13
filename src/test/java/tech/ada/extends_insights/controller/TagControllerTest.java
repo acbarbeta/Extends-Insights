@@ -95,11 +95,11 @@ class TagControllerTest {
     }
 
     @Test
-    void deleteTag() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/tags/{id}", anyLong())
+    void deleteTagHttpTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/tags/tags/{id}", anyLong())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(tag)))
-                .andExpect(status().isNoContent());
+                        .andExpect(status().isNoContent());
         verify(tagService, times(1)).deleteTag(anyLong());
     }
 
