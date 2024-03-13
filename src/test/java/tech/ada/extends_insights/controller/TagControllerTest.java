@@ -13,6 +13,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import tech.ada.extends_insights.domain.entities.Publication;
 import tech.ada.extends_insights.domain.entities.Tag;
@@ -78,14 +79,17 @@ class TagControllerTest {
         .andExpect(jsonPath("$.[0].title", equalTo("tagTitle")));
     }
 
-//TODO: MUDANÇAS FEITAS EM 12/03 E COM ERROS - GETTAGSBYPUBLICATION E UPDATETAGHTTPTEST
     @Test
-    void getTagsByPublication() throws Exception {
+    void getTagsByPublicationHttpTest() throws Exception {
+        when(tagService.readTagsByPublication(any(Publication.class))).thenReturn(tagList);
+
         mockMvc.perform(MockMvcRequestBuilders.get("/tags/tags/{publicationId}", 1L)
-                        .contentType(MediaType.APPLICATION_JSON))
-                        .andDo(MockMvcResultHandlers.print())
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.[0].id", equalTo(1)));
     }
+
 
     @Test
     void updateTagHttpTest() throws Exception {
@@ -95,6 +99,7 @@ class TagControllerTest {
                         .content(asJsonString(updateTagRequest)))
                         .andExpect(status().isOk());
         verify(tagService, times(1)).updateTag(anyLong(), any());
+
     }
 
     @Test

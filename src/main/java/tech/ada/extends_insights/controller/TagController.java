@@ -55,14 +55,24 @@ public class TagController {
             @ApiResponse(responseCode = "200", description = "Tags found"),
             @ApiResponse(responseCode = "404", description = "Tags not found")
     })
-    @GetMapping(value = "/tags", params = {"publicationId"})
-    public ResponseEntity<List<Tag>> getTagsByPublication(@RequestParam Publication publication) {
+    @GetMapping("/tags/{publicationId}")
+    public ResponseEntity<List<Tag>> getTagsByPublication(@PathVariable Long publicationId) {
+        Publication publication = new Publication();
+        publication.setPublicationId(publicationId);
         List<Tag> tagsByPublication = tagService.readTagsByPublication(publication);
         if (tagsByPublication.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(tagsByPublication);
     }
+//    @GetMapping(value = "/tags", params = {"publicationId"})
+//    public ResponseEntity<List<Tag>> getTagsByPublication(@RequestParam Publication publication) {
+//        List<Tag> tagsByPublication = tagService.readTagsByPublication(publication);
+//        if (tagsByPublication.isEmpty()) {
+//            return ResponseEntity.notFound().build();
+//        }
+//        return ResponseEntity.ok(tagsByPublication);
+//    }
 
     @Operation(summary = "Update tag by id")
     @ApiResponses(value = {
@@ -70,17 +80,20 @@ public class TagController {
             @ApiResponse(responseCode = "404", description = "Tag not found")
     })
     @PatchMapping("/tags/{id}")
-    public ResponseEntity<Tag> updateTag(@PathVariable Long id, @RequestBody UpdateTagRequest request) {
-        Optional<Tag> optionalTag = tagService.readTagById(id);
-        if (optionalTag.isPresent()) {
-            Tag tag = optionalTag.get();
-            tag.setTitle(request.getTitle());
-            Tag updatedTag = tagService.updateTag(id, request);
-            return ResponseEntity.ok(updatedTag);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public ResponseEntity<Tag> updateTag(@PathVariable Long id, @RequestBody UpdateTagRequest updateTagRequest){
+        return ResponseEntity.ok().body(tagService.updateTag(id, updateTagRequest));
     }
+//    public ResponseEntity<Tag> updateTag(@PathVariable Long id, @RequestBody UpdateTagRequest request) {
+//        Optional<Tag> optionalTag = tagService.readTagById(id);
+//        if (optionalTag.isPresent()) {
+//            Tag tag = optionalTag.get();
+//            tag.setTitle(request.getTitle());
+//            Tag updatedTag = tagService.updateTag(id, request);
+//            return ResponseEntity.ok(updatedTag);
+//        } else {
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
 
     @Operation(summary = "Delete tag by id")
     @ApiResponses(value = {
