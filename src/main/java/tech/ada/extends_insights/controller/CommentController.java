@@ -13,6 +13,8 @@ import tech.ada.extends_insights.domain.entities.User;
 import tech.ada.extends_insights.domain.models.requests.CommentRequest;
 import tech.ada.extends_insights.domain.models.requests.UpdateCommentRequest;
 import tech.ada.extends_insights.repository.CommentRepository;
+import tech.ada.extends_insights.service.CommentService;
+
 import java.util.Optional;
 
 import java.util.List;
@@ -20,12 +22,13 @@ import java.util.List;
 @RestController
 @RequestMapping("/comments")
 public class CommentController {
-    private final CommentRepository commentRepository;
+
+    private final CommentService commentService;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public CommentController(CommentRepository commentRepository, ModelMapper modelMapper) {
-        this.commentRepository = commentRepository;
+    public CommentController(CommentService commentService, ModelMapper modelMapper) {
+        this.commentService = commentService;
         this.modelMapper = modelMapper;
     }
 
@@ -36,8 +39,7 @@ public class CommentController {
     })
     @PostMapping("/comments")
     public ResponseEntity<Comment> createComment(@RequestBody CommentRequest commentRequest) {
-        Comment convertedcomment = modelMapper.map(commentRequest, Comment.class);
-        Comment newComment = commentRepository.save(convertedcomment);
+        Comment newComment = commentService.createComment(commentRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(newComment);
     }
 
@@ -48,8 +50,7 @@ public class CommentController {
     })
     @GetMapping("/all-comments")
     public ResponseEntity<List<Comment>> getAllComments() {
-        List<Comment> comments = commentRepository.findAll();
-        return ResponseEntity.ok(comments);
+        return ResponseEntity.ok().body(commentService.getAllComments());
     }
 
     @Operation(summary = "Get comment by author")
@@ -59,11 +60,7 @@ public class CommentController {
     })
     @GetMapping(value = "/comments", params = {"authorId"})
     public ResponseEntity<List<Comment>> getCommentByUserId(@RequestParam User authorId) {
-        List<Comment> comments = commentRepository.findByAuthor(authorId);
-        if(comments.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(comments);
+        return ResponseEntity.ok().body(commentService.getCommentByUserId(authorId));
     }
 
     @Operation(summary = "Update comment by id")
@@ -72,19 +69,8 @@ public class CommentController {
             @ApiResponse(responseCode = "404", description = "Comment not found")
     })
     @PatchMapping("/comments/{id}")
-    public ResponseEntity<String> updateComment(@PathVariable Long id, @RequestBody UpdateCommentRequest commentRequest) {
-
-        Comment comment = commentRepository.findById(id).orElse(null);
-
-        if (comment == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        comment.setCommentBody(commentRequest.getNewCommentBody());
-        commentRepository.save(comment);
-
-        return ResponseEntity.ok("Comment updated successfully");
-
+    public ResponseEntity<String> updateComment(@PathVariable Long id, @RequestBody UpdateCommentRequest updateCommentRequest) {
+        return ResponseEntity.ok().body(commentService.updateComment(id, updateCommentRequest));
     }
 
     @Operation(summary = "Delete comment by id")
@@ -94,12 +80,8 @@ public class CommentController {
     })
     @DeleteMapping("/comments/{id}")
     public ResponseEntity<Void> deleteComment(@PathVariable Long id) {
-        Optional<Comment> commentOptional = commentRepository.findById(id);
-        if (commentOptional.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
 
-        commentRepository.delete(commentOptional.get());
+        commentService.deleteComment(id);
         return ResponseEntity.noContent().build();
     }
 }
