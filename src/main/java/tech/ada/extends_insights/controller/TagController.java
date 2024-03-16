@@ -15,7 +15,6 @@ import tech.ada.extends_insights.domain.models.requests.UpdateTagRequest;
 import tech.ada.extends_insights.service.TagService;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/tags")
@@ -65,14 +64,6 @@ public class TagController {
         }
         return ResponseEntity.ok(tagsByPublication);
     }
-//    @GetMapping(value = "/tags", params = {"publicationId"})
-//    public ResponseEntity<List<Tag>> getTagsByPublication(@RequestParam Publication publication) {
-//        List<Tag> tagsByPublication = tagService.readTagsByPublication(publication);
-//        if (tagsByPublication.isEmpty()) {
-//            return ResponseEntity.notFound().build();
-//        }
-//        return ResponseEntity.ok(tagsByPublication);
-//    }
 
     @Operation(summary = "Update tag by id")
     @ApiResponses(value = {
@@ -83,17 +74,6 @@ public class TagController {
     public ResponseEntity<Tag> updateTag(@PathVariable Long id, @RequestBody UpdateTagRequest updateTagRequest){
         return ResponseEntity.ok().body(tagService.updateTag(id, updateTagRequest));
     }
-//    public ResponseEntity<Tag> updateTag(@PathVariable Long id, @RequestBody UpdateTagRequest request) {
-//        Optional<Tag> optionalTag = tagService.readTagById(id);
-//        if (optionalTag.isPresent()) {
-//            Tag tag = optionalTag.get();
-//            tag.setTitle(request.getTitle());
-//            Tag updatedTag = tagService.updateTag(id, request);
-//            return ResponseEntity.ok(updatedTag);
-//        } else {
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
 
     @Operation(summary = "Delete tag by id")
     @ApiResponses(value = {

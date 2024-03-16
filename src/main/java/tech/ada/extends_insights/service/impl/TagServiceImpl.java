@@ -33,11 +33,6 @@ public class TagServiceImpl implements TagService {
         return tagRepository.findAll();
     }
 
-    public Optional<Tag> readTagById(Long id){
-        Optional<Tag> optionalTag = tagRepository.findById(id);
-        return optionalTag;
-    }
-
     public List<Tag> readTagsByPublication(Publication publication){
         return tagRepository.findByPublication(publication);
     }
