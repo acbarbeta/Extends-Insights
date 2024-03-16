@@ -14,6 +14,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import tech.ada.extends_insights.domain.entities.Comment;
 import tech.ada.extends_insights.domain.entities.Publication;
 import tech.ada.extends_insights.domain.entities.Tag;
 import tech.ada.extends_insights.domain.entities.User;
@@ -22,6 +23,7 @@ import tech.ada.extends_insights.domain.models.requests.PublicationRequest;
 import tech.ada.extends_insights.domain.models.requests.UpdatePublicationRequest;
 import tech.ada.extends_insights.service.impl.PublicationServiceImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -44,26 +46,25 @@ class PublicationControllerTest {
 
     private Publication publication;
     private List<Publication> publicationList;
-    private PublicationRequest publicationRequest;
     private UpdatePublicationRequest updatePublicationRequest;
 
     private User user;
-
     private Category category;
-
     private Tag tag;
-
     private List<Tag> tagList;
 
     @BeforeEach
     void setUp() {
         user = new User("usernameTest", "123456789", "email@test.com");
-        publication = new Publication("title", "content", user, category, tagList);
-        publicationList = List.of(publication);
         category = Category.TECHNOLOGY;
-        tag = new Tag("tagTitle");
+        tagList = new ArrayList<>();
+        tag = new Tag(1L, "tagTitle", publication);
+        publication = new Publication("title", "content", user, category, tagList);
+        updatePublicationRequest = new UpdatePublicationRequest();
+        publicationList = List.of(publication);
         mockMvc = MockMvcBuilders.standaloneSetup(publicationController).build();
     }
+
 
     @Test
     void createPublication() throws Exception {
@@ -143,20 +144,25 @@ class PublicationControllerTest {
 
     @Test
     void updatePublication() throws Exception {
+
         when(publicationService.updatePublication(anyLong(), any())).thenReturn(publication);
-        mockMvc.perform(MockMvcRequestBuilders.patch("/publications-items/{id}", anyLong())
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(asJsonString(updatePublicationRequest)))
+
+        mockMvc.perform(MockMvcRequestBuilders.patch("/publications-items/{id}", 1L)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(asJsonString(updatePublicationRequest)))
                 .andExpect(status().isOk());
+
         verify(publicationService, times(1)).updatePublication(anyLong(), any());
     }
 
+
+
     @Test
-    void deletePublication() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.delete("/publications-items/{id}", anyLong())
+    public void deletePublicationHttpTest() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete("/publications-items/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(publication)))
-                .andExpect(status().isOk());
+                .andExpect(status().isNoContent());
         verify(publicationService, times(1)).deletePublication(anyLong());
     }
 

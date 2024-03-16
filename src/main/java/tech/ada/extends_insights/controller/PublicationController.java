@@ -140,12 +140,7 @@ public class PublicationController {
     })
     @DeleteMapping("/publications-items/{id}")
     public ResponseEntity<Void> deletePublication(@PathVariable Long id) {
-        Publication publication = publicationService.readPublicationById(id);
-        if (publication != null) {
             publicationService.deletePublication(id);
             return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
     }
 }
