@@ -100,7 +100,6 @@ public class PublicationServiceImpl implements PublicationService {
         return null;
     }
 
-    @Override
     public void deletePublication(Long id) {
         Optional<Publication> optionalPublication = publicationRepository.findById(id);
 
