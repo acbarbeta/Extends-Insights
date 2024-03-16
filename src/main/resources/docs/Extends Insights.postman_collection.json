@@ -108,7 +108,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/users?username=",
+							"raw": "http://localhost:8080/users/users?username=",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -234,7 +234,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"publicationTitle\": \"publication title\",\r\n    \"publicationBody\": \"this is the publication content\",\r\n    \"author\": {\r\n        \"userId\": 2,\r\n        \"username\": \"username\",\r\n        \"password\": \"pass123\",\r\n        \"email\": \"user@email.com\",\r\n        \"createdOn\": \"2024-02-25T21:00:01.710423\",\r\n        \"updatedOn\": \"2024-02-25T21:00:01.710422\",\r\n        \"publications\": [],\r\n        \"comments\": []\r\n    },\r\n    \"category\": 1,\r\n    \"tags\": [{\r\n        \"id\": 6,\r\n        \"title\": \"teste1\",\r\n        \"publication\": null\r\n    }]\r\n}",
+							"raw": "{\n    \"publicationTitle\": \"publication title\",\n    \"publicationBody\": \"this is the publication content\",\n    \"author\": {\n        \"userId\": 1,\n        \"username\": \"username\",\n        \"password\": \"pass123\",\n        \"email\": \"user@email.com\"        \n    },\n    \"category\": \"SOFTWARE_DEVELOPMENT\",\n    \"tags\": [{\n        \"id\": 1,\n        \"title\": \"tagTitle\",\n        \"publication\": null\n    }]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -471,7 +471,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"title\": \"new title\",\r\n    \"content\": \"this is the new publication content\",\r\n    \"category\": 2,\r\n    \"tag\": [\r\n          {\r\n                \"id\": 6,\r\n                \"title\": \"teste1\",\r\n                \"publication\": null\r\n            }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"title\": \"new title\",\r\n    \"content\": \"this is the new publication content\",\r\n    \"category\": \"INFRASTRUCTURE_AND_NETWORKS\",\r\n    \"tag\": [\r\n          {\r\n                \"id\": 6,\r\n                \"title\": \"teste1\",\r\n                \"publication\": null\r\n            }\r\n    ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -555,7 +555,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"author\": {\r\n        \"userId\": 2,\r\n        \"username\": \"username\",\r\n        \"password\": \"pass123\",\r\n        \"email\": \"user@email.com\",\r\n        \"createdOn\": \"2024-02-25T21:00:01.710423\",\r\n        \"updatedOn\": \"2024-02-25T21:00:01.710422\"\r\n    },\r\n    \"publicationId\": 9,\r\n    \"commentBody\": \"comment body\"\r\n}",
+							"raw": "{\n    \"author\": {\n        \"userId\": 1,\n        \"username\": \"username\",\n        \"password\": \"pass123\",\n        \"email\": \"user@email.com\"\n    },\n    \"publicationId\": 1,\n    \"commentBody\": \"comment body\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -675,7 +675,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"author\": {\r\n        \"userId\": 2,\r\n        \"username\": \"username\",\r\n        \"password\": \"pass123\",\r\n        \"email\": \"user@email.com\",\r\n        \"createdOn\": \"2024-02-25T21:00:01.710423\",\r\n        \"updatedOn\": \"2024-02-25T21:00:01.710422\"\r\n    },\r\n    \"publicationId\": 9,\r\n    \"commentBody\": \"comment body\"\r\n}",
+							"raw": "{    \n    \"commentBody\": \"comment body modificado\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -754,14 +754,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/tags-creation",
+							"raw": "http://localhost:8080/tags",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
-								"tags-creation"
+								"tags"
 							]
 						}
 					},
@@ -788,13 +788,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/tags/get-all",
+							"raw": "http://localhost:8080/tags/tags/get-all",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"tags",
 								"tags",
 								"get-all"
 							]
@@ -823,13 +824,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/tags?publicationId",
+							"raw": "http://localhost:8080/tags/tags?publicationId",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"tags",
 								"tags"
 							],
 							"query": [
@@ -872,13 +874,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/tags/{id}",
+							"raw": "http://localhost:8080/tags/tags/{id}",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8080",
 							"path": [
+								"tags",
 								"tags",
 								"{id}"
 							]
@@ -914,6 +917,7 @@
 							],
 							"port": "8080",
 							"path": [
+								"tags",
 								"tags",
 								"{id}"
 							]
