@@ -19,6 +19,7 @@ public class Comment {
     private Long commentId;
     @ManyToOne
     private User author;
+    private Long authorId;
     @ManyToOne
     private Publication publication;
     private String commentBody;
@@ -37,6 +38,7 @@ public class Comment {
                    String commentBody){
         this.commentId = commentId;
         this.author = author;
+        this.authorId = author.getUserId();
         this.publication = publication;
         this.commentBody = commentBody;
         this.createdOn = LocalDateTime.now();
