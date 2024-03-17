@@ -64,7 +64,7 @@ public class CommentControllerTest {
     }
     @Test
     public void createComment() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.post("/comments")
+        mockMvc.perform(MockMvcRequestBuilders.post("/comments/comments")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(asJsonString(commentRequest)))
                 .andExpect(status().isCreated());
