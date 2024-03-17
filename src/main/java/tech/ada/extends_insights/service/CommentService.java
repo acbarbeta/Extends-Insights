@@ -10,7 +10,7 @@ import java.util.List;
 public interface CommentService {
     Comment createComment(CommentRequest commentRequest);
     List<Comment> getAllComments();
-    List<Comment> getCommentByUserId(User authorId);
+    List<Comment> getCommentByUserId(Long authorId);
     String updateComment(Long id, UpdateCommentRequest commentRequest);
     void deleteComment(Long id);
 }
