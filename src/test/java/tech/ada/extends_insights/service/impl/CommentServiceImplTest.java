@@ -22,11 +22,10 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @ExtendWith(MockitoExtension.class)
-class CommentServiceImplTest {
+public class CommentServiceImplTest {
 
     public static final long COMMENT_ID = 1L;
     public static final String COMMENT_CONTENT = "commentContent";
-    public static final long USER_ID = 1L;
     public static final long PUBLICATION_ID = 1L;
 
     @InjectMocks
@@ -47,7 +46,7 @@ class CommentServiceImplTest {
     @BeforeEach
     void setUp() {
         commentService = new CommentServiceImpl(commentRepository, modelMapper);
-        comment = new Comment(user, publication, COMMENT_CONTENT);
+        comment = new Comment(COMMENT_ID, user, publication, COMMENT_CONTENT);
         optionalComment = Optional.of(comment);
         commentRequest = new CommentRequest(user, PUBLICATION_ID, COMMENT_CONTENT);
         updateCommentRequest = new UpdateCommentRequest("newCommentContent");

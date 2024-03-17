@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import tech.ada.extends_insights.domain.entities.Comment;
 import tech.ada.extends_insights.domain.entities.Publication;
 import tech.ada.extends_insights.domain.entities.Tag;
 import tech.ada.extends_insights.domain.entities.User;
@@ -100,11 +101,12 @@ public class PublicationServiceImpl implements PublicationService {
         return null;
     }
 
-    public void deletePublication(Long id) {
-        Optional<Publication> optionalPublication = publicationRepository.findById(id);
 
-        if (optionalPublication.isPresent()) {
-            publicationRepository.deleteById(id);
+    @Override
+    public void deletePublication(Long id) {
+        Optional<Publication> publicationOptional = publicationRepository.findById(id);
+        if (publicationOptional.isPresent()) {
+            publicationRepository.delete(publicationOptional.get());
             ResponseEntity.noContent().build();
         } else {
             ResponseEntity.notFound().build();

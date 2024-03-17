@@ -81,7 +81,6 @@ class TagControllerTest {
     @Test
     void getTagsByPublicationHttpTest() throws Exception {
         when(tagService.readTagsByPublication(any(Publication.class))).thenReturn(tagList);
-
         mockMvc.perform(MockMvcRequestBuilders.get("/tags/tags/{publicationId}", 1L)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print())
@@ -92,8 +91,7 @@ class TagControllerTest {
 
     @Test
     void updateTagHttpTest() throws Exception {
-        when(tagService.updateTag(anyLong(), any())).thenReturn(tag);
-        mockMvc.perform(MockMvcRequestBuilders.patch("/tags/tags/{id}", 1L)
+       mockMvc.perform(MockMvcRequestBuilders.patch("/tags/tags/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(updateTagRequest)))
                         .andExpect(status().isOk());
@@ -104,8 +102,7 @@ class TagControllerTest {
     @Test
     void deleteTagHttpTest() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.delete("/tags/tags/{id}", anyLong())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(tag)))
+                        .contentType(MediaType.APPLICATION_JSON))
                         .andExpect(status().isNoContent());
         verify(tagService, times(1)).deleteTag(anyLong());
     }

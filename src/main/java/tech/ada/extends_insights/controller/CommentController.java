@@ -12,10 +12,7 @@ import tech.ada.extends_insights.domain.entities.Comment;
 import tech.ada.extends_insights.domain.entities.User;
 import tech.ada.extends_insights.domain.models.requests.CommentRequest;
 import tech.ada.extends_insights.domain.models.requests.UpdateCommentRequest;
-import tech.ada.extends_insights.repository.CommentRepository;
 import tech.ada.extends_insights.service.CommentService;
-
-import java.util.Optional;
 
 import java.util.List;
 
