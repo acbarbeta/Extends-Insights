@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.ada.extends_insights.domain.entities.Publication;
 import tech.ada.extends_insights.domain.entities.Tag;
-import tech.ada.extends_insights.domain.entities.User;
 import tech.ada.extends_insights.domain.enums.Category;
 import tech.ada.extends_insights.domain.models.requests.PublicationRequest;
 import tech.ada.extends_insights.domain.models.requests.UpdatePublicationRequest;
@@ -107,9 +106,9 @@ public class PublicationController {
             @ApiResponse(responseCode = "200", description = "Publication found"),
             @ApiResponse(responseCode = "404", description = "Publication not found")
     })
-    @GetMapping(value = "/publications-items", params = {"author"})
-    public ResponseEntity<List<Publication>> getPublicationByUser(@RequestParam User author) {
-        List<Publication> publicationByUser = publicationService.getPublicationByUser(author);
+    @GetMapping("/get-publications-by-user/{userId}")
+    public ResponseEntity<List<Publication>> getPublicationByUser(@PathVariable Long userId) {
+        List<Publication> publicationByUser = publicationService.getPublicationByUser(userId);
         if(publicationByUser == null) {
             return ResponseEntity.notFound().build();
         }
