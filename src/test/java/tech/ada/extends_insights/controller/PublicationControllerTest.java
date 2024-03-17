@@ -14,12 +14,10 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import tech.ada.extends_insights.domain.entities.Comment;
 import tech.ada.extends_insights.domain.entities.Publication;
 import tech.ada.extends_insights.domain.entities.Tag;
 import tech.ada.extends_insights.domain.entities.User;
 import tech.ada.extends_insights.domain.enums.Category;
-import tech.ada.extends_insights.domain.models.requests.PublicationRequest;
 import tech.ada.extends_insights.domain.models.requests.UpdatePublicationRequest;
 import tech.ada.extends_insights.service.impl.PublicationServiceImpl;
 
@@ -29,6 +27,8 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static tech.ada.extends_insights.service.impl.PublicationServiceImplTest.PUBLICATION_CONTENT;
+import static tech.ada.extends_insights.service.impl.PublicationServiceImplTest.PUBLICATION_TITLE;
 
 @ExtendWith(MockitoExtension.class)
 class PublicationControllerTest {
@@ -59,8 +59,8 @@ class PublicationControllerTest {
         category = Category.TECHNOLOGY;
         tagList = new ArrayList<>();
         tag = new Tag(1L, "tagTitle", publication);
-        publication = new Publication("title", "content", user, category, tagList);
-        updatePublicationRequest = new UpdatePublicationRequest();
+        publication = new Publication(1L, "title", "content", user, category, tagList);
+        updatePublicationRequest = new UpdatePublicationRequest(PUBLICATION_TITLE, PUBLICATION_CONTENT, category, tagList);
         publicationList = List.of(publication);
         mockMvc = MockMvcBuilders.standaloneSetup(publicationController).build();
     }
@@ -68,7 +68,6 @@ class PublicationControllerTest {
 
     @Test
     void createPublication() throws Exception {
-        when(publicationService.createPublication(any())).thenReturn(publication);
         mockMvc.perform(MockMvcRequestBuilders.post("/publications-items")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(publication)))
@@ -78,80 +77,65 @@ class PublicationControllerTest {
 
     @Test
     void getAllPublications() throws Exception {
-        when(publicationService.readAllPublications()).thenReturn(publicationList);
         mockMvc.perform(MockMvcRequestBuilders.get("/publications-items")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(publication)))
                 .andDo(MockMvcResultHandlers.print());
-        verify(publicationService).readAllPublications();
         verify(publicationService, times(1)).readAllPublications();
     }
 
     @Test
     void getPublicationById() throws Exception {
-        when(publicationService.readPublicationById(anyLong())).thenReturn(publication);
         mockMvc.perform(MockMvcRequestBuilders.get("/publications-items/" + anyLong())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(publication)))
                 .andDo(MockMvcResultHandlers.print());
-        verify(publicationService).readPublicationById(anyLong());
         verify(publicationService, times(1)).readPublicationById(anyLong());
     }
 
     @Test
     void getPublicationByTitle() throws Exception {
-        when(publicationService.readPublicationByTitle(anyString())).thenReturn(publicationList);
         mockMvc.perform(MockMvcRequestBuilders.get("/publications-items?title=" + anyString())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(publication)))
                 .andDo(MockMvcResultHandlers.print());
-        verify(publicationService).readPublicationByTitle(anyString());
         verify(publicationService, times(1)).readPublicationByTitle(anyString());
     }
 
     @Test
     void getPublicationByCategory() throws Exception {
-        when(publicationService.getPublicationByCategory(category)).thenReturn(publicationList);
         mockMvc.perform(MockMvcRequestBuilders.get("/publications-items?category=" + category)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(publication)))
                 .andDo(MockMvcResultHandlers.print());
-        verify(publicationService).getPublicationByCategory(category);
         verify(publicationService, times(1)).getPublicationByCategory(category);
     }
 
     @Test
     void getPublicationByTag() throws Exception {
-        when(publicationService.getPublicationByTag(any())).thenReturn(publicationList);
         mockMvc.perform(MockMvcRequestBuilders.get("/publications-items?tag=" + any())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(publication)))
                 .andDo(MockMvcResultHandlers.print());
-        verify(publicationService).getPublicationByTag(any());
         verify(publicationService, times(1)).getPublicationByTag(any());
     }
 
     @Test
     void getPublicationByUser() throws Exception {
-        when(publicationService.getPublicationByUser(user)).thenReturn(publicationList);
         mockMvc.perform(MockMvcRequestBuilders.get("/publications-items?author=" + user)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(publication)))
                 .andDo(MockMvcResultHandlers.print());
-        verify(publicationService).getPublicationByUser(user);
         verify(publicationService, times(1)).getPublicationByUser(user);
     }
 
     @Test
     void updatePublication() throws Exception {
-
         when(publicationService.updatePublication(anyLong(), any())).thenReturn(publication);
-
         mockMvc.perform(MockMvcRequestBuilders.patch("/publications-items/{id}", 1L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(asJsonString(updatePublicationRequest)))
                 .andExpect(status().isOk());
-
         verify(publicationService, times(1)).updatePublication(anyLong(), any());
     }
 

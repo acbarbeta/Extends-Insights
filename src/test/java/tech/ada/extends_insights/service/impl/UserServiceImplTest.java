@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
-class UserServiceImplTest {
+public class UserServiceImplTest {
 
     public static final long USER_ID = 1L;
     public static final String USERNAME = "username";

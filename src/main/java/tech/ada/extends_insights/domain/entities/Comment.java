@@ -31,9 +31,11 @@ public class Comment {
         this.updatedOn = null;
     }
 
-    public Comment(User author,
+    public Comment(Long commentId,
+                   User author,
                    Publication publication,
                    String commentBody){
+        this.commentId = commentId;
         this.author = author;
         this.publication = publication;
         this.commentBody = commentBody;

@@ -42,11 +42,13 @@ public class Publication {
         this.updatedOn = null;
     }
 
-    public Publication(String publicationTitle,
+    public Publication(Long publicationId,
+                       String publicationTitle,
                        String publicationBody,
                        User author,
                        Category category,
                        List<Tag> tags){
+        this.publicationId = publicationId;
         this.publicationTitle = publicationTitle;
         this.publicationBody = publicationBody;
         this.author = author;
