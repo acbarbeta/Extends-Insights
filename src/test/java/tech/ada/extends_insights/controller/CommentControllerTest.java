@@ -59,7 +59,7 @@ public class CommentControllerTest {
         commentRequest = new CommentRequest(user, PUBLICATION_ID, COMMENT_CONTENT);
         updateCommentRequest = new UpdateCommentRequest(COMMENT_CONTENT);
         publication = new Publication();
-        user = new User(USERNAME, PASSWORD, EMAIL);
+        user = new User(1L,USERNAME, PASSWORD, EMAIL);
         mockMvc = MockMvcBuilders.standaloneSetup(commentController).build();
     }
     @Test
@@ -82,10 +82,10 @@ public class CommentControllerTest {
 
     @Test
     void getCommentByUserId() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/comments/{author}" + anyLong())
+        mockMvc.perform(MockMvcRequestBuilders.get("/comments/get-comment-by-authorId/{authorId}" , user.getUserId())
                 .contentType(MediaType.APPLICATION_JSON))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(jsonPath("$.[0].commentBody", equalTo(COMMENT_CONTENT)));
+                .andDo(MockMvcResultHandlers.print());
+                verify(commentService,times(1)).getCommentByUserId(user.getUserId());
 
     }
 

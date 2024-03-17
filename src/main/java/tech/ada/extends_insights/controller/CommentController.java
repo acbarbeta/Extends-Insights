@@ -55,8 +55,8 @@ public class CommentController {
             @ApiResponse(responseCode = "200", description = "Comment found"),
             @ApiResponse(responseCode = "404", description = "Comment not found")
     })
-    @GetMapping(value = "/comments", params = {"authorId"})
-    public ResponseEntity<List<Comment>> getCommentByUserId(@RequestParam User authorId) {
+    @GetMapping("/get-comment-by-authorId/{authorId}")
+    public ResponseEntity<List<Comment>> getCommentByUserId(@PathVariable Long authorId) {
         return ResponseEntity.ok().body(commentService.getCommentByUserId(authorId));
     }
 
