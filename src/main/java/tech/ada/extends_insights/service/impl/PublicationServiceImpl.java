@@ -4,10 +4,8 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import tech.ada.extends_insights.domain.entities.Comment;
 import tech.ada.extends_insights.domain.entities.Publication;
 import tech.ada.extends_insights.domain.entities.Tag;
-import tech.ada.extends_insights.domain.entities.User;
 import tech.ada.extends_insights.domain.enums.Category;
 import tech.ada.extends_insights.domain.models.requests.PublicationRequest;
 import tech.ada.extends_insights.domain.models.requests.UpdatePublicationRequest;
@@ -77,8 +75,8 @@ public class PublicationServiceImpl implements PublicationService {
     }
 
     @Override
-    public List<Publication> getPublicationByUser(User author) {
-        var publicationByUser = publicationRepository.findByAuthor(author);
+    public List<Publication> getPublicationByUser(Long userId) {
+        var publicationByUser = publicationRepository.findByAuthor(userId);
         if(publicationByUser == null) {
             return null;
         }

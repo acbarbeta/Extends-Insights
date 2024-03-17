@@ -55,7 +55,7 @@ class PublicationControllerTest {
 
     @BeforeEach
     void setUp() {
-        user = new User("usernameTest", "123456789", "email@test.com");
+        user = new User(1L, "usernameTest", "123456789", "email@test.com");
         category = Category.TECHNOLOGY;
         tagList = new ArrayList<>();
         tag = new Tag(1L, "tagTitle", publication);
@@ -122,11 +122,10 @@ class PublicationControllerTest {
 
     @Test
     void getPublicationByUser() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/publications-items?author=" + user)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(publication)))
+        mockMvc.perform(MockMvcRequestBuilders.get("/get-publications-by-user/{userId}", user.getUserId())
+                        .contentType(MediaType.APPLICATION_JSON))
                 .andDo(MockMvcResultHandlers.print());
-        verify(publicationService, times(1)).getPublicationByUser(user);
+        verify(publicationService, times(1)).getPublicationByUser(user.getUserId());
     }
 
     @Test
