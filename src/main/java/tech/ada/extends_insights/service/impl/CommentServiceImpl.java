@@ -39,7 +39,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public List<Comment> getCommentByUserId(Long authorId) {
-        List<Comment> comments = commentRepository.findByAuthor(authorId);
+        List<Comment> comments = commentRepository.findByAuthorId(authorId);
         if (comments.isEmpty()) {
             throw new ObjectNotFoundException("No comments found");
         } else {

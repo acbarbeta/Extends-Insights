@@ -26,6 +26,7 @@ public class Publication {
     private String publicationBody;
     @ManyToOne
     private User author;
+    private Long authorId;
     private Category category;
     @OneToMany
     private List<Tag> tags;
@@ -52,6 +53,7 @@ public class Publication {
         this.publicationTitle = publicationTitle;
         this.publicationBody = publicationBody;
         this.author = author;
+        this.authorId = author.getUserId();
         this.category = category;
         this.tags = tags;
         this.views = 0;

@@ -76,7 +76,7 @@ public class PublicationServiceImpl implements PublicationService {
 
     @Override
     public List<Publication> getPublicationByUser(Long userId) {
-        var publicationByUser = publicationRepository.findByAuthor(userId);
+        var publicationByUser = publicationRepository.findByAuthorId(userId);
         if(publicationByUser == null) {
             return null;
         }
