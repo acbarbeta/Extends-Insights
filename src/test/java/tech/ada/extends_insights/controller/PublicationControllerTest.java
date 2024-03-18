@@ -120,14 +120,14 @@ class PublicationControllerTest {
         verify(publicationService, times(1)).getPublicationByTag(any());
     }
 
-    @Test
-    void getPublicationByUser() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/publications-items?author=" + user)
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(asJsonString(publication)))
-                .andDo(MockMvcResultHandlers.print());
-        verify(publicationService, times(1)).getPublicationByUser(user);
-    }
+//    @Test
+//    void getPublicationByUser() throws Exception {
+//        mockMvc.perform(MockMvcRequestBuilders.get("/publications-items?author=" + user)
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(asJsonString(publication)))
+//                .andDo(MockMvcResultHandlers.print());
+//        verify(publicationService, times(1)).getPublicationByUser(user);
+//    }
 
     @Test
     void updatePublication() throws Exception {

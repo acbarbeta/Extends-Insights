@@ -76,14 +76,14 @@ public class PublicationServiceImpl implements PublicationService {
         return publicationByTag;
     }
 
-    @Override
-    public List<Publication> getPublicationByUser(User author) {
-        var publicationByUser = publicationRepository.findByAuthor(author);
-        if(publicationByUser == null) {
-            return null;
-        }
-        return publicationByUser;
-    }
+//    @Override
+//    public List<Publication> getPublicationByUser(User author) {
+//        var publicationByUser = publicationRepository.findByAuthor(author);
+//        if(publicationByUser == null) {
+//            return null;
+//        }
+//        return publicationByUser;
+//    }
 
     @Override
     public Publication updatePublication(Long id, UpdatePublicationRequest updatePublicationRequest) {

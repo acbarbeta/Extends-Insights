@@ -109,13 +109,13 @@ public class PublicationServiceImplTest {
         assertEquals(publicationList, publicationByTag);
     }
 
-    @DisplayName("Should get publication by user successfully")
-    @Test
-    void getPublicationByUser() {
-        Mockito.when(publicationRepository.findByAuthor(user)).thenReturn(publicationList);
-        List<Publication> publicationByUser = publicationService.getPublicationByUser(user);
-        assertEquals(publicationList, publicationByUser);
-    }
+//    @DisplayName("Should get publication by user successfully")
+//    @Test
+//    void getPublicationByUser() {
+//        Mockito.when(publicationRepository.findByAuthor(user)).thenReturn(publicationList);
+//        List<Publication> publicationByUser = publicationService.getPublicationByUser(user);
+//        assertEquals(publicationList, publicationByUser);
+//    }
 
     @DisplayName("Should update publication successfully")
     @Test
