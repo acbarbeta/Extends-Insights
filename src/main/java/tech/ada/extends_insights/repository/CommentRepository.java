@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
     public interface CommentRepository extends JpaRepository<Comment, Long> {
 
-    List<Comment> findByAuthor(Long author);
+//    List<Comment> findByAuthor(User author);
 }
 
