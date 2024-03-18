@@ -71,6 +71,7 @@ public class CommentServiceImplTest {
         assertEquals(commentList, comments);
     }
 
+
 //    @Test
 //    void getCommentByUserId() {
 //        Mockito.when(commentRepository.findByAuthor(user)).thenReturn(commentList);

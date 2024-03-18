@@ -52,6 +52,7 @@ public class CommentController {
         return ResponseEntity.ok().body(commentService.getAllComments());
     }
 
+
 //    @Operation(summary = "Get comment by author")
 //    @ApiResponses(value = {
 //            @ApiResponse(responseCode = "200", description = "Comment found"),

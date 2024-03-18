@@ -59,7 +59,7 @@ public class CommentControllerTest {
         commentRequest = new CommentRequest(user, PUBLICATION_ID, COMMENT_CONTENT);
         updateCommentRequest = new UpdateCommentRequest(COMMENT_CONTENT);
         publication = new Publication();
-        user = new User(USERNAME, PASSWORD, EMAIL);
+        user = new User(1L,USERNAME, PASSWORD, EMAIL);
         mockMvc = MockMvcBuilders.standaloneSetup(commentController).build();
     }
     @Test
@@ -79,6 +79,7 @@ public class CommentControllerTest {
                 .andDo(MockMvcResultHandlers.print())
                 .andExpect(jsonPath("$.[0].commentBody", equalTo(COMMENT_CONTENT)));
     }
+
 
 //    @Test
 //    void getCommentByUserId() throws Exception {
