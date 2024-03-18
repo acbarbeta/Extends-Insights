@@ -15,7 +15,7 @@ public interface PublicationService {
     List<Publication> readPublicationByTitle(String title);
     List<Publication> getPublicationByCategory(Category category);
     List<Publication> getPublicationByTag(Tag tag);
-    List<Publication> getPublicationByUser(Long userId);
+//    List<Publication> getPublicationByUser(User author);
     Publication updatePublication(Long id, UpdatePublicationRequest updatePublicationRequest);
     void deletePublication(Long id);
 }

@@ -9,9 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tech.ada.extends_insights.domain.entities.Comment;
-import tech.ada.extends_insights.domain.entities.User;
 import tech.ada.extends_insights.domain.models.requests.CommentRequest;
 import tech.ada.extends_insights.domain.models.requests.UpdateCommentRequest;
+import tech.ada.extends_insights.repository.UserRepository;
 import tech.ada.extends_insights.service.CommentService;
 
 import java.util.List;
@@ -21,11 +21,13 @@ import java.util.List;
 public class CommentController {
 
     private final CommentService commentService;
+    private UserRepository userRepository;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public CommentController(CommentService commentService, ModelMapper modelMapper) {
+    public CommentController(CommentService commentService, UserRepository userRepository, ModelMapper modelMapper) {
         this.commentService = commentService;
+        this.userRepository = userRepository;
         this.modelMapper = modelMapper;
     }
 
@@ -50,15 +52,18 @@ public class CommentController {
         return ResponseEntity.ok().body(commentService.getAllComments());
     }
 
-    @Operation(summary = "Get comment by author")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Comment found"),
-            @ApiResponse(responseCode = "404", description = "Comment not found")
-    })
-    @GetMapping("/get-comment-by-authorId/{authorId}")
-    public ResponseEntity<List<Comment>> getCommentByUserId(@PathVariable Long authorId) {
-        return ResponseEntity.ok().body(commentService.getCommentByUserId(authorId));
-    }
+
+//    @Operation(summary = "Get comment by author")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "Comment found"),
+//            @ApiResponse(responseCode = "404", description = "Comment not found")
+//    })
+//
+//
+////    @GetMapping(value="/comments-by-userId/{authorId}")
+////    public ResponseEntity<List<Comment>> getCommentByUserId(@PathVariable User authorId) {
+////        return ResponseEntity.ok().body(commentService.getCommentByUserId(authorId));
+////    }
 
     @Operation(summary = "Update comment by id")
     @ApiResponses(value = {

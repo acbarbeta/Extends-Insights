@@ -101,19 +101,20 @@ public class PublicationController {
         return ResponseEntity.ok(publicationByTag);
     }
 
-    @Operation(summary = "Get publication by author")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Publication found"),
-            @ApiResponse(responseCode = "404", description = "Publication not found")
-    })
-    @GetMapping("/get-publications-by-user/{userId}")
-    public ResponseEntity<List<Publication>> getPublicationByUser(@PathVariable Long userId) {
-        List<Publication> publicationByUser = publicationService.getPublicationByUser(userId);
-        if(publicationByUser == null) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(publicationByUser);
-    }
+
+//    @Operation(summary = "Get publication by author")
+//    @ApiResponses(value = {
+//            @ApiResponse(responseCode = "200", description = "Publication found"),
+//            @ApiResponse(responseCode = "404", description = "Publication not found")
+//    })
+//    @GetMapping(value = "/publications-items", params = {"author"})
+//    public ResponseEntity<List<Publication>> getPublicationByUser(@RequestParam User author) {
+//        List<Publication> publicationByUser = publicationService.getPublicationByUser(author);
+//        if(publicationByUser == null) {
+//            return ResponseEntity.notFound().build();
+//        }
+//        return ResponseEntity.ok(publicationByUser);
+//    }
 
     @Operation(summary = "Update publication by id")
     @ApiResponses(value = {
